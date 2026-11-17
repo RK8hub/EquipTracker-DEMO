@@ -1,0 +1,1605 @@
+{
+  "specs": [
+    {
+      "id": 1,
+      "cpu": {
+        "brand": "Intel",
+        "model": "Core i5-12400"
+      },
+      "ram": {
+        "capacity": {
+          "value": 16,
+          "unit": "GB"
+        },
+        "mode": "dual"
+      },
+      "storage": {
+        "capacity": {
+          "value": 512,
+          "unit": "GB"
+        },
+        "type": "SSD"
+      },
+      "graphics": {
+        "brand": "Intel",
+        "model": "UHD Graphics 730",
+        "type": "integrated",
+        "memory": null
+      }
+    },
+    {
+      "id": 2,
+      "cpu": {
+        "brand": "Intel",
+        "model": "Core i7-12700"
+      },
+      "ram": {
+        "capacity": {
+          "value": 32,
+          "unit": "GB"
+        },
+        "mode": "dual"
+      },
+      "storage": {
+        "capacity": {
+          "value": 1024,
+          "unit": "GB"
+        },
+        "type": "NVMe"
+      },
+      "graphics": {
+        "brand": "NVIDIA",
+        "model": "GeForce RTX 3060",
+        "type": "dedicated",
+        "memory": {
+          "value": 12,
+          "unit": "GB"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "cpu": {
+        "brand": "AMD",
+        "model": "Ryzen 5 5600"
+      },
+      "ram": {
+        "capacity": {
+          "value": 16,
+          "unit": "GB"
+        },
+        "mode": "dual"
+      },
+      "storage": {
+        "capacity": {
+          "value": 500,
+          "unit": "GB"
+        },
+        "type": "SSD"
+      },
+      "graphics": {
+        "brand": "NVIDIA",
+        "model": "GeForce GTX 1650",
+        "type": "dedicated",
+        "memory": {
+          "value": 4,
+          "unit": "GB"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "cpu": {
+        "brand": "AMD",
+        "model": "Ryzen 7 5800X"
+      },
+      "ram": {
+        "capacity": {
+          "value": 32,
+          "unit": "GB"
+        },
+        "mode": "dual"
+      },
+      "storage": {
+        "capacity": {
+          "value": 1024,
+          "unit": "GB"
+        },
+        "type": "NVMe"
+      },
+      "graphics": {
+        "brand": "NVIDIA",
+        "model": "GeForce RTX 3070",
+        "type": "dedicated",
+        "memory": {
+          "value": 8,
+          "unit": "GB"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "cpu": {
+        "brand": "Intel",
+        "model": "Core i3-12100"
+      },
+      "ram": {
+        "capacity": {
+          "value": 8,
+          "unit": "GB"
+        },
+        "mode": "single"
+      },
+      "storage": {
+        "capacity": {
+          "value": 256,
+          "unit": "GB"
+        },
+        "type": "SSD"
+      },
+      "graphics": {
+        "brand": "Intel",
+        "model": "UHD Graphics 730",
+        "type": "integrated",
+        "memory": null
+      }
+    },
+    {
+      "id": 6,
+      "cpu": {
+        "brand": "Apple",
+        "model": "M2"
+      },
+      "ram": {
+        "capacity": {
+          "value": 16,
+          "unit": "GB"
+        },
+        "mode": "single"
+      },
+      "storage": {
+        "capacity": {
+          "value": 512,
+          "unit": "GB"
+        },
+        "type": "SSD"
+      },
+      "graphics": {
+        "brand": "Apple",
+        "model": "GPU 10 núcleos",
+        "type": "integrated",
+        "memory": null
+      }
+    },
+    {
+      "id": 7,
+      "cpu": {
+        "brand": "Intel",
+        "model": "Xeon E-2336"
+      },
+      "ram": {
+        "capacity": {
+          "value": 64,
+          "unit": "GB"
+        },
+        "mode": "dual"
+      },
+      "storage": {
+        "capacity": {
+          "value": 2048,
+          "unit": "GB"
+        },
+        "type": "NVMe"
+      },
+      "graphics": {
+        "brand": "Intel",
+        "model": "UHD Graphics P750",
+        "type": "integrated",
+        "memory": null
+      }
+    },
+    {
+      "id": 8,
+      "cpu": {
+        "brand": "Intel",
+        "model": "Core i9-12900K"
+      },
+      "ram": {
+        "capacity": {
+          "value": 64,
+          "unit": "GB"
+        },
+        "mode": "dual"
+      },
+      "storage": {
+        "capacity": {
+          "value": 2048,
+          "unit": "GB"
+        },
+        "type": "NVMe"
+      },
+      "graphics": {
+        "brand": "NVIDIA",
+        "model": "GeForce RTX 3080",
+        "type": "dedicated",
+        "memory": {
+          "value": 10,
+          "unit": "GB"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "cpu": {
+        "brand": "AMD",
+        "model": "Ryzen 3 4300G"
+      },
+      "ram": {
+        "capacity": {
+          "value": 8,
+          "unit": "GB"
+        },
+        "mode": "single"
+      },
+      "storage": {
+        "capacity": {
+          "value": 1024,
+          "unit": "GB"
+        },
+        "type": "HDD"
+      },
+      "graphics": {
+        "brand": "AMD",
+        "model": "Radeon Vega 6",
+        "type": "integrated",
+        "memory": null
+      }
+    },
+    {
+      "id": 10,
+      "cpu": {
+        "brand": "Intel",
+        "model": "Core i5-1135G7"
+      },
+      "ram": {
+        "capacity": {
+          "value": 16,
+          "unit": "GB"
+        },
+        "mode": "single"
+      },
+      "storage": {
+        "capacity": {
+          "value": 512,
+          "unit": "GB"
+        },
+        "type": "NVMe"
+      },
+      "graphics": {
+        "brand": "Intel",
+        "model": "Iris Xe",
+        "type": "integrated",
+        "memory": null
+      }
+    }
+  ],
+  "equipment": [
+    {
+      "id": 1,
+      "serial": "EQ-2022-0001",
+      "brand": "Lenovo",
+      "model": "ThinkPad T480",
+      "specs_id": 1,
+      "created_at": "2026-01-05T09:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "serial": "EQ-2023-0002",
+      "brand": "HP",
+      "model": "ProBook 450 G9",
+      "specs_id": 2,
+      "created_at": "2026-01-10T09:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "serial": "EQ-2024-0003",
+      "brand": "Lenovo",
+      "model": "ThinkPad T14",
+      "specs_id": 3,
+      "created_at": "2026-01-15T09:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "serial": "EQ-2022-0004",
+      "brand": "Asus",
+      "model": "ExpertBook B1",
+      "specs_id": 4,
+      "created_at": "2026-01-20T09:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "serial": "EQ-2023-0005",
+      "brand": "Acer",
+      "model": "TravelMate P2",
+      "specs_id": 5,
+      "created_at": "2026-01-25T09:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "serial": "EQ-2024-0006",
+      "brand": "Apple",
+      "model": "MacBook Air M2",
+      "specs_id": 6,
+      "created_at": "2026-01-30T09:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "serial": "EQ-2022-0007",
+      "brand": "Dell",
+      "model": "OptiPlex 7000",
+      "specs_id": 7,
+      "created_at": "2026-02-04T09:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "serial": "EQ-2023-0008",
+      "brand": "HP",
+      "model": "EliteBook 840 G8",
+      "specs_id": 8,
+      "created_at": "2026-02-09T09:00:00.000Z"
+    },
+    {
+      "id": 9,
+      "serial": "EQ-2024-0009",
+      "brand": "Lenovo",
+      "model": "ThinkCentre M70q",
+      "specs_id": 9,
+      "created_at": "2026-02-14T09:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "serial": "EQ-2022-0010",
+      "brand": "Asus",
+      "model": "VivoBook 15",
+      "specs_id": 10,
+      "created_at": "2026-02-19T09:00:00.000Z"
+    },
+    {
+      "id": 11,
+      "serial": "EQ-2023-0011",
+      "brand": "Acer",
+      "model": "Aspire 5",
+      "specs_id": 1,
+      "created_at": "2026-02-24T09:00:00.000Z"
+    },
+    {
+      "id": 12,
+      "serial": "EQ-2024-0012",
+      "brand": "Apple",
+      "model": "MacBook Pro 14",
+      "specs_id": 2,
+      "created_at": "2026-03-01T09:00:00.000Z"
+    },
+    {
+      "id": 13,
+      "serial": "EQ-2022-0013",
+      "brand": "Dell",
+      "model": "Precision 3560",
+      "specs_id": 3,
+      "created_at": "2026-03-06T09:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "serial": "EQ-2023-0014",
+      "brand": "HP",
+      "model": "ProDesk 400 G7",
+      "specs_id": 4,
+      "created_at": "2026-03-11T09:00:00.000Z"
+    },
+    {
+      "id": 15,
+      "serial": "EQ-2024-0015",
+      "brand": "Lenovo",
+      "model": "IdeaPad 3",
+      "specs_id": 5,
+      "created_at": "2026-03-16T09:00:00.000Z"
+    },
+    {
+      "id": 16,
+      "serial": "EQ-2022-0016",
+      "brand": "Asus",
+      "model": "ProArt Studiobook 16",
+      "specs_id": 6,
+      "created_at": "2026-03-21T09:00:00.000Z"
+    },
+    {
+      "id": 17,
+      "serial": "EQ-2023-0017",
+      "brand": "Acer",
+      "model": "Veriton X",
+      "specs_id": 7,
+      "created_at": "2026-03-26T09:00:00.000Z"
+    },
+    {
+      "id": 18,
+      "serial": "EQ-2024-0018",
+      "brand": "Apple",
+      "model": "Mac mini M2",
+      "specs_id": 8,
+      "created_at": "2026-03-31T09:00:00.000Z"
+    },
+    {
+      "id": 19,
+      "serial": "EQ-2022-0019",
+      "brand": "Dell",
+      "model": "Vostro 3520",
+      "specs_id": 9,
+      "created_at": "2026-04-05T09:00:00.000Z"
+    },
+    {
+      "id": 20,
+      "serial": "EQ-2023-0020",
+      "brand": "HP",
+      "model": "ZBook Firefly 14",
+      "specs_id": 10,
+      "created_at": "2026-04-10T09:00:00.000Z"
+    },
+    {
+      "id": 21,
+      "serial": "EQ-2024-0021",
+      "brand": "Lenovo",
+      "model": "ThinkBook 15",
+      "specs_id": 1,
+      "created_at": "2026-04-15T09:00:00.000Z"
+    },
+    {
+      "id": 22,
+      "serial": "EQ-2022-0022",
+      "brand": "Asus",
+      "model": "ExpertCenter D5",
+      "specs_id": 2,
+      "created_at": "2026-04-20T09:00:00.000Z"
+    },
+    {
+      "id": 23,
+      "serial": "EQ-2023-0023",
+      "brand": "Acer",
+      "model": "Swift 3",
+      "specs_id": 3,
+      "created_at": "2026-04-25T09:00:00.000Z"
+    },
+    {
+      "id": 24,
+      "serial": "EQ-2024-0024",
+      "brand": "Apple",
+      "model": "iMac 24",
+      "specs_id": 4,
+      "created_at": "2026-04-30T09:00:00.000Z"
+    },
+    {
+      "id": 25,
+      "serial": "EQ-2022-0025",
+      "brand": "Dell",
+      "model": "Latitude 5430",
+      "specs_id": 5,
+      "created_at": "2026-05-05T09:00:00.000Z"
+    },
+    {
+      "id": 26,
+      "serial": "EQ-2023-0026",
+      "brand": "HP",
+      "model": "ProBook 450 G9",
+      "specs_id": 6,
+      "created_at": "2026-05-10T09:00:00.000Z"
+    },
+    {
+      "id": 27,
+      "serial": "EQ-2024-0027",
+      "brand": "Lenovo",
+      "model": "ThinkPad T14",
+      "specs_id": 7,
+      "created_at": "2026-05-15T09:00:00.000Z"
+    },
+    {
+      "id": 28,
+      "serial": "EQ-2022-0028",
+      "brand": "Asus",
+      "model": "ExpertBook B1",
+      "specs_id": 8,
+      "created_at": "2026-05-20T09:00:00.000Z"
+    },
+    {
+      "id": 29,
+      "serial": "EQ-2023-0029",
+      "brand": "Acer",
+      "model": "TravelMate P2",
+      "specs_id": 9,
+      "created_at": "2026-05-25T09:00:00.000Z"
+    },
+    {
+      "id": 30,
+      "serial": "EQ-2024-0030",
+      "brand": "Apple",
+      "model": "MacBook Air M2",
+      "specs_id": 10,
+      "created_at": "2026-05-30T09:00:00.000Z"
+    },
+    {
+      "id": 31,
+      "serial": "EQ-2022-0031",
+      "brand": "Dell",
+      "model": "OptiPlex 7000",
+      "specs_id": 1,
+      "created_at": "2026-06-04T09:00:00.000Z"
+    },
+    {
+      "id": 32,
+      "serial": "EQ-2023-0032",
+      "brand": "HP",
+      "model": "EliteBook 840 G8",
+      "specs_id": 2,
+      "created_at": "2026-06-09T09:00:00.000Z"
+    },
+    {
+      "id": 33,
+      "serial": "EQ-2024-0033",
+      "brand": "Lenovo",
+      "model": "ThinkCentre M70q",
+      "specs_id": 3,
+      "created_at": "2026-06-14T09:00:00.000Z"
+    },
+    {
+      "id": 34,
+      "serial": "EQ-2022-0034",
+      "brand": "Asus",
+      "model": "VivoBook 15",
+      "specs_id": 4,
+      "created_at": "2026-06-19T09:00:00.000Z"
+    },
+    {
+      "id": 35,
+      "serial": "EQ-2023-0035",
+      "brand": "Acer",
+      "model": "Aspire 5",
+      "specs_id": 5,
+      "created_at": "2026-06-24T09:00:00.000Z"
+    },
+    {
+      "id": 36,
+      "serial": "EQ-2024-0036",
+      "brand": "Apple",
+      "model": "MacBook Pro 14",
+      "specs_id": 6,
+      "created_at": "2026-06-29T09:00:00.000Z"
+    },
+    {
+      "id": 37,
+      "serial": "EQ-2022-0037",
+      "brand": "Dell",
+      "model": "Precision 3560",
+      "specs_id": 7,
+      "created_at": "2026-07-04T09:00:00.000Z"
+    },
+    {
+      "id": 38,
+      "serial": "EQ-2023-0038",
+      "brand": "HP",
+      "model": "ProDesk 400 G7",
+      "specs_id": 8,
+      "created_at": "2026-07-09T09:00:00.000Z"
+    },
+    {
+      "id": 39,
+      "serial": "EQ-2024-0039",
+      "brand": "Lenovo",
+      "model": "IdeaPad 3",
+      "specs_id": 9,
+      "created_at": "2026-07-14T09:00:00.000Z"
+    },
+    {
+      "id": 40,
+      "serial": "EQ-2022-0040",
+      "brand": "Asus",
+      "model": "ProArt Studiobook 16",
+      "specs_id": 10,
+      "created_at": "2026-07-19T09:00:00.000Z"
+    },
+    {
+      "id": 41,
+      "serial": "EQ-2023-0041",
+      "brand": "Acer",
+      "model": "Veriton X",
+      "specs_id": 1,
+      "created_at": "2026-07-24T09:00:00.000Z"
+    },
+    {
+      "id": 42,
+      "serial": "EQ-2024-0042",
+      "brand": "Apple",
+      "model": "Mac mini M2",
+      "specs_id": 2,
+      "created_at": "2026-07-29T09:00:00.000Z"
+    },
+    {
+      "id": 43,
+      "serial": "EQ-2022-0043",
+      "brand": "Dell",
+      "model": "Vostro 3520",
+      "specs_id": 3,
+      "created_at": "2026-08-03T09:00:00.000Z"
+    },
+    {
+      "id": 44,
+      "serial": "EQ-2023-0044",
+      "brand": "HP",
+      "model": "ZBook Firefly 14",
+      "specs_id": 4,
+      "created_at": "2026-08-08T09:00:00.000Z"
+    },
+    {
+      "id": 45,
+      "serial": "EQ-2024-0045",
+      "brand": "Lenovo",
+      "model": "ThinkBook 15",
+      "specs_id": 5,
+      "created_at": "2026-08-13T09:00:00.000Z"
+    },
+    {
+      "id": 46,
+      "serial": "EQ-2022-0046",
+      "brand": "Asus",
+      "model": "ExpertCenter D5",
+      "specs_id": 6,
+      "created_at": "2026-08-18T09:00:00.000Z"
+    },
+    {
+      "id": 47,
+      "serial": "EQ-2023-0047",
+      "brand": "Acer",
+      "model": "Swift 3",
+      "specs_id": 7,
+      "created_at": "2026-08-23T09:00:00.000Z"
+    },
+    {
+      "id": 48,
+      "serial": "EQ-2024-0048",
+      "brand": "Apple",
+      "model": "iMac 24",
+      "specs_id": 8,
+      "created_at": "2026-08-28T09:00:00.000Z"
+    },
+    {
+      "id": 49,
+      "serial": "EQ-2022-0049",
+      "brand": "Dell",
+      "model": "Latitude 5430",
+      "specs_id": 9,
+      "created_at": "2026-09-02T09:00:00.000Z"
+    },
+    {
+      "id": 50,
+      "serial": "EQ-2023-0050",
+      "brand": "HP",
+      "model": "ProBook 450 G9",
+      "specs_id": 10,
+      "created_at": "2026-09-07T09:00:00.000Z"
+    }
+  ],
+  "operators": [
+    {
+      "id": 1,
+      "name": "Raúl Emmanuel Aguilar González",
+      "department": "Tecnología",
+      "position": "Desarrollador"
+    },
+    {
+      "id": 2,
+      "name": "Carlos Rivas",
+      "department": "Contabilidad",
+      "position": "Coordinador"
+    },
+    {
+      "id": 3,
+      "name": "María López",
+      "department": "Recursos Humanos",
+      "position": "Gerente"
+    },
+    {
+      "id": 4,
+      "name": "Jorge Castillo",
+      "department": "Ventas",
+      "position": "Técnico"
+    },
+    {
+      "id": 5,
+      "name": "Lucía Herrera",
+      "department": "Operaciones",
+      "position": "Asistente"
+    },
+    {
+      "id": 6,
+      "name": "Miguel Ángel Torres",
+      "department": "Logística",
+      "position": "Jefe de área"
+    },
+    {
+      "id": 7,
+      "name": "Sofía Ramírez",
+      "department": "Dirección",
+      "position": "Analista"
+    },
+    {
+      "id": 8,
+      "name": "Diego Fuentes",
+      "department": "Soporte",
+      "position": "Coordinador"
+    },
+    {
+      "id": 9,
+      "name": "Valeria Cruz",
+      "department": "Tecnología",
+      "position": "Gerente"
+    },
+    {
+      "id": 10,
+      "name": "Andrés Palacios",
+      "department": "Contabilidad",
+      "position": "Técnico"
+    },
+    {
+      "id": 11,
+      "name": "Camila Rojas",
+      "department": "Recursos Humanos",
+      "position": "Asistente"
+    },
+    {
+      "id": 12,
+      "name": "José Antonio Silva",
+      "department": "Ventas",
+      "position": "Jefe de área"
+    },
+    {
+      "id": 13,
+      "name": "Daniela Méndez",
+      "department": "Operaciones",
+      "position": "Analista"
+    },
+    {
+      "id": 14,
+      "name": "Ricardo Navarro",
+      "department": "Logística",
+      "position": "Coordinador"
+    },
+    {
+      "id": 15,
+      "name": "Paola Guzmán",
+      "department": "Dirección",
+      "position": "Gerente"
+    },
+    {
+      "id": 16,
+      "name": "Fernando Salas",
+      "department": "Soporte",
+      "position": "Técnico"
+    },
+    {
+      "id": 17,
+      "name": "Gabriela Ortiz",
+      "department": "Tecnología",
+      "position": "Asistente"
+    },
+    {
+      "id": 18,
+      "name": "Manuel Espinoza",
+      "department": "Contabilidad",
+      "position": "Jefe de área"
+    },
+    {
+      "id": 19,
+      "name": "Isabel Cárdenas",
+      "department": "Recursos Humanos",
+      "position": "Analista"
+    },
+    {
+      "id": 20,
+      "name": "Óscar Delgado",
+      "department": "Ventas",
+      "position": "Coordinador"
+    },
+    {
+      "id": 21,
+      "name": "Natalia Vega",
+      "department": "Operaciones",
+      "position": "Gerente"
+    },
+    {
+      "id": 22,
+      "name": "Roberto Aguilar",
+      "department": "Logística",
+      "position": "Técnico"
+    },
+    {
+      "id": 23,
+      "name": "Claudia Pineda",
+      "department": "Dirección",
+      "position": "Asistente"
+    },
+    {
+      "id": 24,
+      "name": "Alejandro Mora",
+      "department": "Soporte",
+      "position": "Jefe de área"
+    },
+    {
+      "id": 25,
+      "name": "Teresa Solís",
+      "department": "Tecnología",
+      "position": "Analista"
+    },
+    {
+      "id": 26,
+      "name": "Héctor Blandón",
+      "department": "Contabilidad",
+      "position": "Coordinador"
+    },
+    {
+      "id": 27,
+      "name": "Marcela Reyes",
+      "department": "Recursos Humanos",
+      "position": "Gerente"
+    },
+    {
+      "id": 28,
+      "name": "Iván Gutiérrez",
+      "department": "Ventas",
+      "position": "Técnico"
+    },
+    {
+      "id": 29,
+      "name": "Rosa Miranda",
+      "department": "Operaciones",
+      "position": "Asistente"
+    },
+    {
+      "id": 30,
+      "name": "Emilio Zapata",
+      "department": "Logística",
+      "position": "Jefe de área"
+    },
+    {
+      "id": 31,
+      "name": "Patricia Luna",
+      "department": "Dirección",
+      "position": "Analista"
+    },
+    {
+      "id": 32,
+      "name": "Sergio Cabrera",
+      "department": "Soporte",
+      "position": "Coordinador"
+    },
+    {
+      "id": 33,
+      "name": "Adriana Ríos",
+      "department": "Tecnología",
+      "position": "Gerente"
+    },
+    {
+      "id": 34,
+      "name": "Julián Montoya",
+      "department": "Contabilidad",
+      "position": "Técnico"
+    },
+    {
+      "id": 35,
+      "name": "John Doe",
+      "department": "??????",
+      "position": "MissingNo."
+    },
+    {
+      "id": 36,
+      "name": "Markus Persson",
+      "department": "Tecnología",
+      "position": "Programador de videojuegos"
+    },
+    {
+      "id": 37,
+      "name": "Victor von Doom",
+      "department": "Tecnología",
+      "position": "Ingeniero de sistemas"
+    },
+    {
+      "id": 38,
+      "name": "William Afton",
+      "department": "Tecnología",
+      "position": "Ingeniero de robótica"
+    },
+    {
+      "id": 39,
+      "name": "Peter Benjamin Parker",
+      "department": "Ventas",
+      "position": "Fotógrafo"
+    },
+    {
+      "id": 40,
+      "name": "Juan Manuel Caldera",
+      "department": "Ventas",
+      "position": "Gerente de sucursales"
+    },
+    {
+      "id": 41,
+      "name": "William Sherlock Scott Holmes",
+      "department": "Dirección",
+      "position": "Detective consultor"
+    },
+    {
+      "id": 42,
+      "name": "Patrick J. Jane",
+      "department": "Dirección",
+      "position": "Consultor"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@demo.local",
+      "role": "admin",
+      "created_at": "2026-01-05T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "email": "soporte1@demo.local",
+      "role": "staff",
+      "created_at": "2026-01-08T09:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "email": "soporte2@demo.local",
+      "role": "staff",
+      "created_at": "2026-01-17T10:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "email": "sistemas@demo.local",
+      "role": "staff",
+      "created_at": "2026-02-14T11:00:00.000Z"
+    }
+  ],
+  "assignments": [
+    {
+      "id": 1,
+      "equipment_id": 1,
+      "operator_id": 1,
+      "assigned_by": 1,
+      "assigned_at": "2026-02-04T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "equipment_id": 2,
+      "operator_id": 2,
+      "assigned_by": 1,
+      "assigned_at": "2026-02-10T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 3,
+      "equipment_id": 3,
+      "operator_id": 3,
+      "assigned_by": 1,
+      "assigned_at": "2026-02-16T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "equipment_id": 4,
+      "operator_id": 4,
+      "assigned_by": 1,
+      "assigned_at": "2026-02-22T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 5,
+      "equipment_id": 5,
+      "operator_id": 5,
+      "assigned_by": 1,
+      "assigned_at": "2026-02-28T10:00:00.000Z",
+      "returned_at": "2026-03-20T16:00:00.000Z",
+      "status": "inactive"
+    },
+    {
+      "id": 6,
+      "equipment_id": 6,
+      "operator_id": 6,
+      "assigned_by": 1,
+      "assigned_at": "2026-03-06T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 7,
+      "equipment_id": 7,
+      "operator_id": 7,
+      "assigned_by": 1,
+      "assigned_at": "2026-03-12T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 8,
+      "equipment_id": 8,
+      "operator_id": 8,
+      "assigned_by": 1,
+      "assigned_at": "2026-03-18T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 9,
+      "equipment_id": 9,
+      "operator_id": 9,
+      "assigned_by": 1,
+      "assigned_at": "2026-03-24T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 10,
+      "equipment_id": 10,
+      "operator_id": 10,
+      "assigned_by": 1,
+      "assigned_at": "2026-03-30T10:00:00.000Z",
+      "returned_at": "2026-04-19T16:00:00.000Z",
+      "status": "inactive"
+    },
+    {
+      "id": 11,
+      "equipment_id": 11,
+      "operator_id": 11,
+      "assigned_by": 1,
+      "assigned_at": "2026-04-05T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 12,
+      "equipment_id": 12,
+      "operator_id": 12,
+      "assigned_by": 1,
+      "assigned_at": "2026-04-11T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 13,
+      "equipment_id": 13,
+      "operator_id": 13,
+      "assigned_by": 1,
+      "assigned_at": "2026-04-17T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 14,
+      "equipment_id": 14,
+      "operator_id": 14,
+      "assigned_by": 1,
+      "assigned_at": "2026-04-23T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 15,
+      "equipment_id": 15,
+      "operator_id": 15,
+      "assigned_by": 1,
+      "assigned_at": "2026-04-29T10:00:00.000Z",
+      "returned_at": "2026-05-19T16:00:00.000Z",
+      "status": "inactive"
+    },
+    {
+      "id": 16,
+      "equipment_id": 16,
+      "operator_id": 16,
+      "assigned_by": 1,
+      "assigned_at": "2026-05-05T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 17,
+      "equipment_id": 17,
+      "operator_id": 17,
+      "assigned_by": 1,
+      "assigned_at": "2026-05-11T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 18,
+      "equipment_id": 18,
+      "operator_id": 18,
+      "assigned_by": 1,
+      "assigned_at": "2026-05-17T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 19,
+      "equipment_id": 19,
+      "operator_id": 19,
+      "assigned_by": 1,
+      "assigned_at": "2026-05-23T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 20,
+      "equipment_id": 20,
+      "operator_id": 20,
+      "assigned_by": 1,
+      "assigned_at": "2026-05-29T10:00:00.000Z",
+      "returned_at": "2026-06-18T16:00:00.000Z",
+      "status": "inactive"
+    },
+    {
+      "id": 21,
+      "equipment_id": 21,
+      "operator_id": 21,
+      "assigned_by": 1,
+      "assigned_at": "2026-06-04T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 22,
+      "equipment_id": 22,
+      "operator_id": 22,
+      "assigned_by": 1,
+      "assigned_at": "2026-06-10T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 23,
+      "equipment_id": 23,
+      "operator_id": 23,
+      "assigned_by": 1,
+      "assigned_at": "2026-06-16T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 24,
+      "equipment_id": 24,
+      "operator_id": 24,
+      "assigned_by": 1,
+      "assigned_at": "2026-06-22T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 25,
+      "equipment_id": 25,
+      "operator_id": 25,
+      "assigned_by": 1,
+      "assigned_at": "2026-06-28T10:00:00.000Z",
+      "returned_at": "2026-07-18T16:00:00.000Z",
+      "status": "inactive"
+    },
+    {
+      "id": 26,
+      "equipment_id": 26,
+      "operator_id": 26,
+      "assigned_by": 1,
+      "assigned_at": "2026-07-04T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 27,
+      "equipment_id": 27,
+      "operator_id": 27,
+      "assigned_by": 1,
+      "assigned_at": "2026-07-10T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 28,
+      "equipment_id": 28,
+      "operator_id": 28,
+      "assigned_by": 1,
+      "assigned_at": "2026-07-16T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 29,
+      "equipment_id": 29,
+      "operator_id": 29,
+      "assigned_by": 1,
+      "assigned_at": "2026-07-22T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 30,
+      "equipment_id": 30,
+      "operator_id": 30,
+      "assigned_by": 1,
+      "assigned_at": "2026-07-28T10:00:00.000Z",
+      "returned_at": "2026-08-17T16:00:00.000Z",
+      "status": "inactive"
+    },
+    {
+      "id": 31,
+      "equipment_id": 31,
+      "operator_id": 31,
+      "assigned_by": 1,
+      "assigned_at": "2026-08-03T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 32,
+      "equipment_id": 32,
+      "operator_id": 32,
+      "assigned_by": 1,
+      "assigned_at": "2026-08-09T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 33,
+      "equipment_id": 33,
+      "operator_id": 33,
+      "assigned_by": 1,
+      "assigned_at": "2026-08-15T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 34,
+      "equipment_id": 34,
+      "operator_id": 34,
+      "assigned_by": 1,
+      "assigned_at": "2026-08-21T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 35,
+      "equipment_id": 35,
+      "operator_id": 35,
+      "assigned_by": 1,
+      "assigned_at": "2026-08-27T10:00:00.000Z",
+      "returned_at": "2026-09-16T16:00:00.000Z",
+      "status": "inactive"
+    },
+    {
+      "id": 36,
+      "equipment_id": 36,
+      "operator_id": 36,
+      "assigned_by": 1,
+      "assigned_at": "2026-09-02T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 37,
+      "equipment_id": 37,
+      "operator_id": 37,
+      "assigned_by": 1,
+      "assigned_at": "2026-09-08T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 38,
+      "equipment_id": 49,
+      "operator_id": 38,
+      "assigned_by": 1,
+      "assigned_at": "2026-09-14T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 39,
+      "equipment_id": 39,
+      "operator_id": 39,
+      "assigned_by": 1,
+      "assigned_at": "2026-09-20T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    },
+    {
+      "id": 40,
+      "equipment_id": 40,
+      "operator_id": 40,
+      "assigned_by": 1,
+      "assigned_at": "2026-09-26T10:00:00.000Z",
+      "returned_at": "2026-10-16T16:00:00.000Z",
+      "status": "inactive"
+    },
+    {
+      "id": 41,
+      "equipment_id": 43,
+      "operator_id": 42,
+      "assigned_by": 1,
+      "assigned_at": "2026-07-04T10:00:00.000Z",
+      "returned_at": null,
+      "status": "active"
+    }
+  ],
+  "incidents": [
+    {
+      "id": 1,
+      "equipment_id": 1,
+      "type": "Hardware",
+      "reason": "No enciende",
+      "status": "closed",
+      "reported_by": 1,
+      "technician_id": 1,
+      "created_at": "2026-03-06T11:00:00.000Z",
+      "resolved_at": "2026-03-09T15:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "equipment_id": 3,
+      "type": "Software",
+      "reason": "Pantalla con líneas",
+      "status": "open",
+      "reported_by": 3,
+      "technician_id": 2,
+      "created_at": "2026-03-13T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 3,
+      "equipment_id": 5,
+      "type": "Red",
+      "reason": "Disco lleno",
+      "status": "open",
+      "reported_by": 5,
+      "technician_id": 3,
+      "created_at": "2026-03-20T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 4,
+      "equipment_id": 7,
+      "type": "Periférico",
+      "reason": "No conecta a la red",
+      "status": "closed",
+      "reported_by": 7,
+      "technician_id": 4,
+      "created_at": "2026-03-27T11:00:00.000Z",
+      "resolved_at": "2026-03-30T15:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "equipment_id": 9,
+      "type": "Hardware",
+      "reason": "Teclado defectuoso",
+      "status": "open",
+      "reported_by": 9,
+      "technician_id": 1,
+      "created_at": "2026-04-03T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 6,
+      "equipment_id": 11,
+      "type": "Software",
+      "reason": "Sobrecalentamiento",
+      "status": "open",
+      "reported_by": 11,
+      "technician_id": 2,
+      "created_at": "2026-04-10T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 7,
+      "equipment_id": 13,
+      "type": "Red",
+      "reason": "Batería no carga",
+      "status": "closed",
+      "reported_by": 13,
+      "technician_id": 3,
+      "created_at": "2026-04-17T11:00:00.000Z",
+      "resolved_at": "2026-04-20T15:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "equipment_id": 15,
+      "type": "Periférico",
+      "reason": "Sistema operativo lento",
+      "status": "open",
+      "reported_by": 15,
+      "technician_id": 4,
+      "created_at": "2026-04-24T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 9,
+      "equipment_id": 17,
+      "type": "Hardware",
+      "reason": "Impresora no responde",
+      "status": "open",
+      "reported_by": 17,
+      "technician_id": 1,
+      "created_at": "2026-05-01T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 10,
+      "equipment_id": 19,
+      "type": "Software",
+      "reason": "Actualización fallida",
+      "status": "closed",
+      "reported_by": 19,
+      "technician_id": 2,
+      "created_at": "2026-05-08T11:00:00.000Z",
+      "resolved_at": "2026-05-11T15:00:00.000Z"
+    },
+    {
+      "id": 11,
+      "equipment_id": 21,
+      "type": "Red",
+      "reason": "No enciende",
+      "status": "open",
+      "reported_by": 21,
+      "technician_id": 3,
+      "created_at": "2026-05-15T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 12,
+      "equipment_id": 23,
+      "type": "Periférico",
+      "reason": "Pantalla con líneas",
+      "status": "open",
+      "reported_by": 23,
+      "technician_id": 4,
+      "created_at": "2026-05-22T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 13,
+      "equipment_id": 25,
+      "type": "Hardware",
+      "reason": "Disco lleno",
+      "status": "closed",
+      "reported_by": 25,
+      "technician_id": 1,
+      "created_at": "2026-05-29T11:00:00.000Z",
+      "resolved_at": "2026-06-01T15:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "equipment_id": 27,
+      "type": "Software",
+      "reason": "No conecta a la red",
+      "status": "open",
+      "reported_by": 27,
+      "technician_id": 2,
+      "created_at": "2026-06-05T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 15,
+      "equipment_id": 29,
+      "type": "Red",
+      "reason": "Teclado defectuoso",
+      "status": "open",
+      "reported_by": 29,
+      "technician_id": 3,
+      "created_at": "2026-06-12T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 16,
+      "equipment_id": 31,
+      "type": "Periférico",
+      "reason": "Sobrecalentamiento",
+      "status": "closed",
+      "reported_by": 31,
+      "technician_id": 4,
+      "created_at": "2026-06-19T11:00:00.000Z",
+      "resolved_at": "2026-06-22T15:00:00.000Z"
+    },
+    {
+      "id": 17,
+      "equipment_id": 33,
+      "type": "Hardware",
+      "reason": "Batería no carga",
+      "status": "open",
+      "reported_by": 33,
+      "technician_id": 1,
+      "created_at": "2026-06-26T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 18,
+      "equipment_id": 35,
+      "type": "Software",
+      "reason": "Sistema operativo lento",
+      "status": "open",
+      "reported_by": 35,
+      "technician_id": 2,
+      "created_at": "2026-07-03T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 19,
+      "equipment_id": 37,
+      "type": "Red",
+      "reason": "Impresora no responde",
+      "status": "closed",
+      "reported_by": 37,
+      "technician_id": 3,
+      "created_at": "2026-07-10T11:00:00.000Z",
+      "resolved_at": "2026-07-13T15:00:00.000Z"
+    },
+    {
+      "id": 20,
+      "equipment_id": 39,
+      "type": "Periférico",
+      "reason": "Actualización fallida",
+      "status": "open",
+      "reported_by": 39,
+      "technician_id": 4,
+      "created_at": "2026-07-17T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 21,
+      "equipment_id": 43,
+      "type": "Hardware",
+      "reason": "Teresa Lisbon le disparó a la laptop",
+      "status": "open",
+      "reported_by": 42,
+      "technician_id": 2,
+      "created_at": "2026-07-24T11:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 22,
+      "equipment_id": 49,
+      "type": "Software",
+      "reason": "La laptop muestra «IT'S ME» y no se apaga ni desconectándola de la corriente o quitándole la batería",
+      "status": "open",
+      "reported_by": 38,
+      "technician_id": 3,
+      "created_at": "2026-07-26T10:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 23,
+      "equipment_id": 39,
+      "type": "Software",
+      "reason": "La computadora no recuerda su usuario ni contraseña",
+      "status": "open",
+      "reported_by": 39,
+      "technician_id": 4,
+      "created_at": "2026-07-29T15:00:00.000Z",
+      "resolved_at": null
+    },
+    {
+      "id": 24,
+      "equipment_id": 37,
+      "type": "Software",
+      "reason": "La laptop se infectó con un virus llamado Ultron",
+      "status": "open",
+      "reported_by": 37,
+      "technician_id": 2,
+      "created_at": "2026-08-01T09:00:00.000Z",
+      "resolved_at": null
+    }
+  ]
+}

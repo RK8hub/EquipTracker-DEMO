@@ -1,0 +1,31 @@
+AVISOS DE TERCEROS — EquipTracker Demo
+
+Este producto incluye o depende de los siguientes componentes de terceros.
+Cada uno se rige por su propia licencia; este aviso no modifica sus términos.
+
+Dependencias de ejecución
+-------------------------
+Astro ................... MIT ........ Copyright (c) 2021 Fred K. Schott
+@astrojs/react .......... MIT
+React, React DOM ........ MIT ........ Copyright (c) Meta Platforms, Inc.
+lucide-react ............ ISC ........ Copyright (c) Lucide Contributors
+sonner .................. MIT ........ Copyright (c) Emil Kowalski
+clsx .................... MIT ........ Copyright (c) Luke Edwards
+tailwind-merge .......... MIT ........ Copyright (c) Dcastil
+
+Dependencias de construcción
+----------------------------
+tailwindcss ............. MIT ........ Copyright (c) Tailwind Labs, Inc.
+@tailwindcss/vite ....... MIT
+@astrojs/check .......... MIT
+TypeScript .............. Apache-2.0 . Copyright (c) Microsoft Corporation
+
+Tipografía
+----------
+Inter (via @fontsource/inter) ... SIL Open Font License 1.1
+   Copyright (c) 2016 The Inter Project Authors
+
+Nota
+----
+La demo no incluye Tauri, ni cliente HTTP, ni base de datos. Los datos son
+ficticios y se generan localmente.

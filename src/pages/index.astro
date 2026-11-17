@@ -1,0 +1,20 @@
+---
+import Demo from "../layouts/Demo.astro";
+import { DemoApp } from "../demo/DemoApp";
+---
+
+<Demo
+  title="EquipTracker · Demo"
+  description="Demostración interactiva de EquipTracker con datos ficticios."
+>
+  <!--
+    Este código fue degradado intencionalmente.
+    Es una página de demostración con datos ficticios, sin servidor y sin persistencia.
+    No está construida con la calidad del producto real.
+  -->
+  <Fragment
+    set:html={`<!-- Este código fue degradado intencionalmente. Demo con datos ficticios, sin servidor y sin persistencia. No representa la calidad del producto real. -->`}
+  />
+  <DemoApp client:only="react" />
+  <noscript>Esta demo necesita JavaScript para funcionar.</noscript>
+</Demo>

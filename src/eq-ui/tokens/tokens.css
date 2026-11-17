@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Modo Claro (fijo): paleta neutral derivada de #212121 */
+  --eq-background: #FAFAFA;
+  --eq-page: #F3F3F3;
+  --eq-card: #FFFFFF;
+  --eq-card-inverse: #212121;
+  --eq-card-inverse-foreground: #f6f7f9;
+  --eq-object: #EBEBEB;
+  --eq-foreground: #2E2E2E;
+  --eq-primary: #2E2E2E;
+  --eq-primary-foreground: #FFFFFF;
+  --eq-strong: #1B1B1B;
+  --eq-muted-foreground: #5D5D5D;
+  --eq-stroke: #CCCCCC;
+  --eq-border: #DFDFDF;
+  --eq-accent: #212121;
+  --eq-brand: #212121;
+  --eq-brand-foreground: #FFFFFF;
+  --eq-success: #15803D;
+  --eq-success-foreground: #FFFFFF;
+  --eq-warning: #B45309;
+  --eq-warning-foreground: #FFFFFF;
+  --eq-destructive: #D92D20;
+  --eq-destructive-foreground: #FFFFFF;
+  --eq-avatar: #EBEBEB;
+  --eq-avatar-foreground: #5D5D5D;
+  --eq-avatar-solid: #212121;
+  --eq-avatar-icon: #FFFFFF;
+}
+
+/* Tema claro derivado del acento (tonal palette estilo MUI: tono fijo, tono/saturacion de la semilla) */
+@supports (color: oklch(from #000 0.5 c h)) {
+  /* Dinamico: claro (semilla de alta luminosidad) */
+  [data-theme="dynamic"]:not(.dark) {
+    --eq-background: oklch(from var(--eq-accent) 0.985 calc(c * 0.15) h);
+    --eq-page:       oklch(from var(--eq-accent) 0.965 calc(c * 0.18) h);
+    --eq-card: #FFFFFF;
+    --eq-card-inverse: oklch(from var(--eq-accent) min(l, 0.45) c h);
+    --eq-card-inverse-foreground: #FFFFFF;
+    --eq-object:     oklch(from var(--eq-accent) 0.940 calc(c * 0.25) h);
+    --eq-foreground: oklch(from var(--eq-accent) 0.300 calc(c * 0.40) h);
+    --eq-primary: var(--eq-foreground);
+    --eq-primary-foreground: #FFFFFF;
+    --eq-strong: oklch(from var(--eq-accent) 0.220 calc(c * 0.40) h);
+    --eq-muted-foreground: oklch(from var(--eq-accent) 0.480 calc(c * 0.50) h);
+    --eq-stroke: oklch(from var(--eq-accent) 0.845 calc(c * 0.35) h);
+    --eq-border: oklch(from var(--eq-accent) 0.905 calc(c * 0.30) h);
+    --eq-avatar: oklch(from var(--eq-accent) 0.940 calc(c * 0.25) h);
+    --eq-avatar-foreground: var(--eq-foreground);
+    --eq-avatar-solid: oklch(from var(--eq-accent) min(l, 0.45) c h);
+    --eq-avatar-icon: #FFFFFF;
+  }
+  /* Dinamico: oscuro (semilla de baja luminosidad) */
+  [data-theme="dynamic"].dark {
+    --eq-background: oklch(from var(--eq-accent) 0.19 calc(c * 0.25) h);
+    --eq-page:       oklch(from var(--eq-accent) 0.22 calc(c * 0.25) h);
+    --eq-card:       oklch(from var(--eq-accent) 0.25 calc(c * 0.30) h);
+    --eq-card-inverse: oklch(from var(--eq-accent) 0.94 calc(c * 0.15) h);
+    --eq-card-inverse-foreground: oklch(from var(--eq-accent) 0.20 calc(c * 0.20) h);
+    --eq-object:     oklch(from var(--eq-accent) 0.29 calc(c * 0.30) h);
+    --eq-foreground: oklch(from var(--eq-accent) 0.94 calc(c * 0.20) h);
+    --eq-primary: var(--eq-foreground);
+    --eq-primary-foreground: oklch(from var(--eq-accent) 0.20 calc(c * 0.20) h);
+    --eq-strong: oklch(from var(--eq-accent) 0.98 calc(c * 0.15) h);
+    --eq-muted-foreground: oklch(from var(--eq-accent) 0.72 calc(c * 0.35) h);
+    --eq-stroke: oklch(from var(--eq-accent) 0.42 calc(c * 0.35) h);
+    --eq-border: oklch(from var(--eq-accent) 0.33 calc(c * 0.30) h);
+    --eq-avatar: oklch(from var(--eq-accent) 0.29 calc(c * 0.30) h);
+    --eq-avatar-foreground: var(--eq-foreground);
+    --eq-avatar-solid: oklch(from var(--eq-accent) 0.80 c h);
+    --eq-avatar-icon: oklch(from var(--eq-accent) 0.15 calc(c * 0.20) h);
+  }
+}
+
+.dark {
+  --eq-background: #1E1E1E;
+  --eq-foreground: #fafafa;
+  --eq-card: #171717;
+  --eq-card-inverse: #e5e5e5;
+  --eq-card-inverse-foreground: #0a0a0a;
+  --eq-object: #0a0a0a;
+  --eq-primary: #e8e8e8;
+  --eq-primary-foreground: #171717;
+  --eq-strong: #e5e5e5;
+  --eq-stroke: #404040;
+  --eq-border: #262626;
+  --eq-muted-foreground: #a3a3a3;
+  --eq-accent: #3b9eff;
+  --eq-brand: #0588f0;
+  --eq-brand-foreground: #ffffff;
+  --eq-success: #30d158;
+  --eq-success-foreground: #0a0a0a;
+  --eq-warning: #fbbf24;
+  --eq-warning-foreground: #0a0a0a;
+  --eq-destructive: #f87171;
+  --eq-destructive-foreground: #0a0a0a;
+  --eq-avatar: #262626;
+  --eq-avatar-foreground: #d4d4d4;
+  --eq-avatar-solid: #171717;
+  --eq-avatar-icon: #e8e8e8;
+  --eq-page: #171717;
+}
+
+@theme inline {
+  --color-background: var(--eq-background);
+  --color-foreground: var(--eq-foreground);
+  --color-card: var(--eq-card);
+  --color-card-inverse: var(--eq-card-inverse);
+  --color-card-inverse-foreground: var(--eq-card-inverse-foreground);
+  --color-object: var(--eq-object);
+  --color-primary: var(--eq-primary);
+  --color-primary-foreground: var(--eq-primary-foreground);
+  --color-strong: var(--eq-strong);
+  --color-stroke: var(--eq-stroke);
+  --color-border: var(--eq-border);
+  --color-muted-foreground: var(--eq-muted-foreground);
+  --color-accent: var(--eq-accent);
+  --color-brand: var(--eq-brand);
+  --color-brand-foreground: var(--eq-brand-foreground);
+  --color-success: var(--eq-success);
+  --color-success-foreground: var(--eq-success-foreground);
+  --color-warning: var(--eq-warning);
+  --color-warning-foreground: var(--eq-warning-foreground);
+  --color-destructive: var(--eq-destructive);
+  --color-destructive-foreground: var(--eq-destructive-foreground);
+  --color-avatar: var(--eq-avatar);
+  --color-avatar-foreground: var(--eq-avatar-foreground);
+  --color-avatar-solid: var(--eq-avatar-solid);
+  --color-avatar-icon: var(--eq-avatar-icon);
+  --color-page: var(--eq-page);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+}
+
+@theme {
+  --radius-field: 14px;
+  --radius-card: 24px;
+  --radius-input: 8px;
+}
