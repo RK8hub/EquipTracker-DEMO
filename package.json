@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/fix-relative-assets.mjs",
     "preview": "astro preview",
     "seed": "node scripts/seed.mjs",
     "sync": "rsync -a --delete ../EquipTracker-frontend/src/eq-ui/ src/eq-ui/ && rsync -a --delete ../EquipTracker-frontend/src/components/ src/components/ && rsync -a --delete ../EquipTracker-frontend/src/tables/ src/tables/ && cp ../EquipTracker-frontend/src/hooks.ts ../EquipTracker-frontend/src/types.ts ../EquipTracker-frontend/src/index.css src/ && cp ../EquipTracker-frontend/src/lib/format.ts ../EquipTracker-frontend/src/lib/lookups.ts ../EquipTracker-frontend/src/lib/theme.ts src/lib/"
