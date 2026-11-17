@@ -50,8 +50,9 @@ pnpm preview
 pnpm seed       # regenera src/demo/seed.json
 ```
 
-`pnpm sync` copia componentes y pantallas desde `../EquipTracker-frontend`;
-solo funciona en local y no forma parte del build.
+El codigo compartido (`eq-ui`, `components`, `tables`, `lib`, `hooks.ts`,
+`types.ts`, `index.css`) esta copiado y versionado dentro de `src/`. El repo
+no depende de ningun directorio externo ni de otro repositorio para compilar.
 
 ## Despliegue
 
