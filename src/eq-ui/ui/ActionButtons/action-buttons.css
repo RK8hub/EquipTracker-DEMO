@@ -4,15 +4,17 @@
   @apply inline-flex h-10 items-center rounded-[14px] border border-stroke bg-object text-primary shadow-sm;
 }
 
-.eq-action-buttons > button {
+.eq-action-buttons button {
   @apply inline-flex size-9 cursor-pointer items-center justify-center rounded-[12px] outline-none;
 }
 
-.eq-action-buttons > button:hover {
-  @apply bg-border/60;
+@media (hover: hover) and (pointer: fine) {
+  .eq-action-buttons button:hover {
+    @apply bg-border/60;
+  }
 }
 
-.eq-action-buttons > button:focus-visible {
+.eq-action-buttons button:focus-visible {
   @apply ring-[3px] ring-zinc-400/50;
 }
 

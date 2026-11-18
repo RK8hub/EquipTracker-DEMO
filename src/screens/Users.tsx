@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button, Textfield } from "../eq-ui";
+import { Button, Popup, Textfield } from "../eq-ui";
 import { api } from "../api/client";
 import { errorMessage, useAsync } from "../hooks";
 import { formatDate } from "../lib/format";
 import { ErrorState, Loading } from "../components/Feedback";
 import { ModalCard } from "../components/ModalCard";
+import { Overlay } from "../components/Overlay";
 import { Page } from "../components/Page";
 
 interface UserForm {
@@ -32,6 +33,7 @@ export function UsersScreen() {
 
   const [changingId, setChangingId] = useState<number | null>(null);
   const [newPassword, setNewPassword] = useState("");
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   if (loading && !data) return <Loading />;
   if (error) return <ErrorState message={error} onRetry={reload} />;
@@ -44,7 +46,7 @@ export function UsersScreen() {
       return;
     }
     if (!validPassword(form.password)) {
-      toast.error("Contraseña inválida: 8-64 chars, letras, numeros y symbol, sin espacios.");
+      toast.error("Contraseña inválida: 8-64 caracteres, con letras, números y símbolo, sin espacios.");
       return;
     }
     setBusy(true);
@@ -60,12 +62,13 @@ export function UsersScreen() {
     }
   }
 
-  async function remove(id: number) {
-    if (!window.confirm("Eliminar este usuario?")) return;
+  async function remove() {
+    if (deletingId == null || busy) return;
     setBusy(true);
     try {
-      await api.users.delete(id);
+      await api.users.delete(deletingId);
       toast.success("Usuario eliminado");
+      setDeletingId(null);
       reload();
     } catch (err) {
       toast.error(errorMessage(err));
@@ -78,7 +81,7 @@ export function UsersScreen() {
     event.preventDefault();
     if (!changingId) return;
     if (!validPassword(newPassword)) {
-      toast.error("Contraseña inválida: 8-64 chars, letras, numeros y symbol, sin espacios.");
+      toast.error("Contraseña inválida: 8-64 caracteres, con letras, números y símbolo, sin espacios.");
       return;
     }
     setBusy(true);
@@ -119,7 +122,7 @@ export function UsersScreen() {
               placeholder="Contraseña"
             />
             <p className="text-xs text-muted-foreground">
-              8-64 caracteres, letras, números y symbol, sin espacios.
+              8-64 caracteres, con letras, números y símbolo, sin espacios.
             </p>
             <Button text={busy ? "Guardando..." : "Crear"} variant="primary" type="submit" disabled={busy} />
           </form>
@@ -155,7 +158,7 @@ export function UsersScreen() {
                     variant="ghost"
                     className="h-8 px-3"
                     disabled={busy}
-                    onClick={() => remove(user.id)}
+                    onClick={() => setDeletingId(user.id)}
                   />
                 </div>
               </div>
@@ -191,6 +194,19 @@ export function UsersScreen() {
             placeholder="Nueva contraseña"
           />
         </ModalCard>
+      )}
+
+      {deletingId !== null && (
+        <Overlay onClose={() => !busy && setDeletingId(null)}>
+          <Popup
+            title="¿Eliminar usuario?"
+            description="Se eliminará la cuenta seleccionada. Esta acción no se puede deshacer."
+            acceptLabel={busy ? "Eliminando..." : "Eliminar"}
+            acceptVariant="destructive"
+            onAccept={() => void remove()}
+            onCancel={() => setDeletingId(null)}
+          />
+        </Overlay>
       )}
     </Page>
   );

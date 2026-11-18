@@ -5,7 +5,7 @@ import { SortDropdown } from "../components/SortDropdown";
 import { incidentColumns, incidentRow } from "../tables/incidents";
 import { api } from "../api/client";
 import { errorMessage, useAsync, useScrollPreserve, useSort } from "../hooks";
-import { displayName, equipmentLabel, searchKey, userLabel } from "../lib/format";
+import { displayName, equipmentLabel, userLabel, searchKey } from "../lib/format";
 import { toMap } from "../lib/lookups";
 import { ErrorState, Loading } from "../components/Feedback";
 import { ModalCard } from "../components/ModalCard";
@@ -154,6 +154,7 @@ export function IncidentsScreen() {
   ).map((item) => ({
     value: String(item.id),
     label: `${item.brand} ${item.model} · ${item.serial}`,
+    search: item.serial,
   }));
 
   const chooseEquipment = (value: string) => {
@@ -249,12 +250,13 @@ export function IncidentsScreen() {
           <Header
             variant="crud"
             searchProps={{
-              placeholder: "Buscar incidencias...",
+              placeholder: "Buscar incidencia...",
               value: search,
               onChange: (event) => setSearch(event.target.value),
             }}
             actionProps={{
               onAdd: () => setForm({ ...emptyForm }),
+              addLabel: "Crear incidencia",
               showDelete: false,
             }}
             right={
@@ -309,14 +311,11 @@ export function IncidentsScreen() {
             <SelectField
               label="Equipo"
               searchable
+              searchPlaceholder="Buscar por serial..."
               value={form.equipment_id}
               onChange={chooseEquipment}
               options={equipmentOptions}
-              placeholder={
-                reporterEquipmentIds.length > 1
-                  ? "Selecciona uno de sus equipos"
-                  : "Selecciona un equipo"
-              }
+              placeholder="Buscar por serial..."
             />
             <Textfield
               label="Tipo"

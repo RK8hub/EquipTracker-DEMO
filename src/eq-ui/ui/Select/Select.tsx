@@ -8,8 +8,8 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { DropdownButton } from "../DropdownButton/DropdownButton";
+import { Tooltip } from "../Tooltip";
 import { cn } from "../../lib/cn";
-import { searchKey } from "../../../lib/format";
 import "./select.css";
 
 // Registro global para que solo un Select esté abierto a la vez.
@@ -18,6 +18,7 @@ const openSelects = new Set<() => void>();
 export interface SelectOption {
   value: string;
   label: string;
+  search?: string;
 }
 
 export interface SelectFieldProps {
@@ -31,6 +32,7 @@ export interface SelectFieldProps {
   className?: string;
   /** Muestra un campo de búsqueda dentro del dropdown para filtrar escribiendo. */
   searchable?: boolean;
+  searchPlaceholder?: string;
 }
 
 export function SelectField({
@@ -43,6 +45,7 @@ export function SelectField({
   required = false,
   className,
   searchable = false,
+  searchPlaceholder = "Buscar...",
 }: SelectFieldProps) {
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(-1);
@@ -55,10 +58,15 @@ export function SelectField({
   const selected = options.find((o) => o.value === value);
   const displayLabel = selected ? selected.label : (placeholder ?? "");
 
-  const term = searchKey(query);
+  const normalize = (value: string) =>
+    value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  const term = normalize(query.trim());
   const filtered =
     searchable && term
-      ? options.filter((o) => searchKey(o.label).includes(term))
+      ? options.filter((o) => normalize(o.search ?? o.label).includes(term))
       : options;
   const items =
     placeholder && !(searchable && term)
@@ -193,7 +201,7 @@ export function SelectField({
                 type="search"
                 autoFocus
                 value={query}
-                placeholder="Buscar..."
+                placeholder={searchPlaceholder}
                 className="eq-select__search"
                 onChange={(e) => {
                   setQuery(e.target.value);
@@ -226,9 +234,10 @@ export function SelectField({
                   )}
                   onMouseEnter={() => setHighlight(i)}
                   onClick={() => choose(o.value)}
-                  title={o.label}
                 >
-                  <span className="block truncate">{o.label}</span>
+                  <Tooltip label={o.label} className="flex w-full">
+                    <span className="block w-full truncate">{o.label}</span>
+                  </Tooltip>
                 </li>
               ))}
             </ul>

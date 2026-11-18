@@ -1,0 +1,9 @@
+@reference "../../tokens/tokens.css";
+
+.eq-tooltip {
+  @apply inline-flex;
+}
+
+.eq-tooltip__bubble {
+  @apply pointer-events-none fixed z-[9999] -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md bg-primary px-2.5 py-1.5 text-xs font-medium text-primary-foreground shadow-lg;
+}

@@ -1,7 +1,33 @@
 @reference "../../tokens/tokens.css";
 
 .eq-sidebar {
-  @apply flex h-full w-full max-w-[255px] flex-col gap-2 rounded-none border-0 border-r border-stroke bg-card p-2 text-foreground;
+  @apply flex h-full w-[255px] shrink-0 flex-col gap-2 rounded-none border-0 border-r border-stroke bg-card p-2 text-foreground transition-[width] duration-200;
+}
+
+.eq-sidebar--collapsed {
+  @apply w-[72px] items-center;
+}
+
+.eq-sidebar__header {
+  @apply flex w-full items-center gap-1;
+}
+
+.eq-sidebar--collapsed .eq-sidebar__header {
+  @apply flex-col gap-2;
+}
+
+.eq-sidebar__toggle {
+  @apply flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-muted-foreground transition-colors outline-none;
+}
+
+.eq-sidebar__toggle:focus-visible {
+  @apply ring-[3px] ring-zinc-400/50;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .eq-sidebar__toggle:hover {
+    @apply bg-border/50 text-foreground;
+  }
 }
 
 .eq-sidebar button {
@@ -13,11 +39,11 @@
 }
 
 .eq-sidebar__workspace {
-  @apply flex w-full items-center gap-2 rounded-[10px] p-2 text-left transition-colors;
+  @apply flex min-w-0 flex-1 items-center gap-2 rounded-[10px] p-2 text-left transition-colors;
 }
 
-.eq-sidebar__workspace:hover {
-  @apply bg-border/50;
+.eq-sidebar--collapsed .eq-sidebar__workspace {
+  @apply w-auto flex-none justify-center p-1;
 }
 
 .eq-sidebar__workspace-icon {
@@ -41,7 +67,11 @@
 }
 
 .eq-sidebar__tabs {
-  @apply flex flex-1 flex-col gap-2 p-2;
+  @apply flex w-full flex-1 flex-col gap-2 p-2;
+}
+
+.eq-sidebar--collapsed .eq-sidebar__tabs {
+  @apply items-center p-1;
 }
 
 .eq-sidebar__section {
@@ -49,15 +79,28 @@
 }
 
 .eq-sidebar__nav {
-  @apply flex flex-col gap-2;
+  @apply flex w-full flex-col gap-2;
+}
+
+.eq-sidebar--collapsed .eq-sidebar__nav {
+  @apply items-center;
 }
 
 .eq-sidebar__user {
   @apply flex w-full items-center gap-2 rounded-[10px] p-2 text-left transition-colors;
 }
 
-.eq-sidebar__user:hover {
-  @apply bg-border/50;
+.eq-sidebar--collapsed .eq-sidebar__user {
+  @apply w-auto justify-center p-1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .eq-sidebar__workspace:hover {
+    @apply bg-border/50;
+  }
+  .eq-sidebar__user:hover {
+    @apply bg-border/50;
+  }
 }
 
 .eq-sidebar__avatar {

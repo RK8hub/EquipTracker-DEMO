@@ -5,7 +5,7 @@ import { SortDropdown } from "../components/SortDropdown";
 import { assignmentColumns, assignmentRow } from "../tables/assignments";
 import { api } from "../api/client";
 import { errorMessage, useAsync, useScrollPreserve, useSort } from "../hooks";
-import { displayName, equipmentLabel, formatDate, operatorLabel, searchKey } from "../lib/format";
+import { displayName, equipmentLabel, operatorLabel, searchKey } from "../lib/format";
 import { toMap } from "../lib/lookups";
 import { ErrorState, Loading } from "../components/Feedback";
 import { ModalCard } from "../components/ModalCard";
@@ -200,12 +200,13 @@ export function AssignmentsScreen() {
           <Header
             variant="crud"
             searchProps={{
-              placeholder: "Buscar asignaciones...",
+              placeholder: "Buscar asignación...",
               value: search,
               onChange: (event) => setSearch(event.target.value),
             }}
             actionProps={{
               onAdd: () => setForm({ ...emptyForm }),
+              addLabel: "Crear asignación",
               showDelete: false,
             }}
             right={

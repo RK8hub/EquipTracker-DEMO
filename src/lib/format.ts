@@ -1,8 +1,9 @@
 export function initials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
-  // Primer nombre + primer apellido; con dos palabras, la segunda es el apellido.
-  const letters = (parts[0]?.[0] ?? "") + (parts[2]?.[0] ?? parts[1]?.[0] ?? "");
-  return letters.toUpperCase() || "??";
+  if (parts.length === 0) return "??";
+  const first = parts[0]?.[0] ?? "";
+  const last = parts.length > 2 ? parts[2]?.[0] ?? "" : parts[1]?.[0] ?? "";
+  return (first + last).toUpperCase() || "??";
 }
 
 // Clave de búsqueda: ignora tildes y mayúsculas sin alterar el texto mostrado.

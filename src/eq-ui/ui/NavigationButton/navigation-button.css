@@ -4,8 +4,10 @@
   @apply inline-flex h-[42px] cursor-pointer items-center justify-between gap-2.5 rounded-[14px] border border-stroke bg-object px-5 text-sm leading-5 font-normal text-primary transition-colors outline-none;
 }
 
-.eq-navigation-button:hover {
-  @apply bg-border/60;
+@media (hover: hover) and (pointer: fine) {
+  .eq-navigation-button:hover {
+    @apply bg-border/60;
+  }
 }
 
 .eq-navigation-button:focus-visible {

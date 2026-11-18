@@ -44,8 +44,10 @@
   @apply flex size-10 cursor-pointer items-center justify-center rounded-[14px] border border-stroke text-primary outline-none transition-colors;
 }
 
-.eq-card-equipment__more:hover {
-  @apply bg-border/60;
+@media (hover: hover) and (pointer: fine) {
+  .eq-card-equipment__more:hover {
+    @apply bg-border/60;
+  }
 }
 
 .eq-card-equipment__more:focus-visible {

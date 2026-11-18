@@ -2,6 +2,7 @@ import type { HTMLAttributes, ReactNode } from "react";
 import { Checkbox } from "../Checkbox";
 import { Footer } from "../Footer";
 import { Header } from "../Header";
+import { Tooltip } from "../Tooltip";
 import { cn } from "../../lib/cn";
 import "./data-table.css";
 
@@ -119,16 +120,16 @@ export function DataTable({
               )}
               {columns.map((column) => {
                 const value = row[column.key];
-                const title = typeof value === "string" ? value : undefined;
                 return (
                   <div
                     key={column.key}
                     role="cell"
-                    title={title}
                     className={cn("eq-data-table__cell", column.className)}
                   >
                     {typeof value === "string" ? (
-                      <span className="block w-full truncate">{value}</span>
+                      <Tooltip label={value} className="flex w-full">
+                        <span className="block w-full truncate">{value}</span>
+                      </Tooltip>
                     ) : (
                       value
                     )}

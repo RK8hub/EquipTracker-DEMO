@@ -16,42 +16,44 @@
   @apply border-stroke bg-object text-primary;
 }
 
-.eq-button--secondary:hover:not(:disabled) {
-  @apply bg-border/60;
-}
-
 .eq-button--primary {
   @apply border-brand bg-brand text-brand-foreground;
-}
-
-.eq-button--primary:hover:not(:disabled) {
-  @apply bg-brand/90;
 }
 
 .eq-button--ghost {
   @apply border-transparent bg-transparent text-primary;
 }
 
-.eq-button--ghost:hover:not(:disabled) {
-  @apply bg-border/60;
-}
-
 .eq-button--destructive {
   @apply border-destructive bg-destructive text-destructive-foreground;
-}
-
-.eq-button--destructive:hover:not(:disabled) {
-  @apply bg-destructive/90;
 }
 
 .eq-button--success {
   @apply border-success bg-success text-success-foreground;
 }
 
-.eq-button--success:hover:not(:disabled) {
-  @apply bg-success/90;
-}
-
 .eq-button__icon {
   @apply inline-flex size-6 items-center justify-center;
+}
+
+.eq-button:active:not(:disabled) {
+  @apply scale-[0.97];
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .eq-button--secondary:hover:not(:disabled) {
+    @apply bg-border/60;
+  }
+  .eq-button--primary:hover:not(:disabled) {
+    @apply bg-brand/90;
+  }
+  .eq-button--ghost:hover:not(:disabled) {
+    @apply bg-border/60;
+  }
+  .eq-button--destructive:hover:not(:disabled) {
+    @apply bg-destructive/90;
+  }
+  .eq-button--success:hover:not(:disabled) {
+    @apply bg-success/90;
+  }
 }

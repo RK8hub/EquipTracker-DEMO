@@ -1,16 +1,15 @@
-import { Monitor, Users, Wrench,FileSpreadsheet } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Monitor, Users, Wrench, FileSpreadsheet } from "lucide-react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Button, DataTable, DropdownButton, Header, InfoCard, type DataTableColumn, type DataTableRow } from "../eq-ui";
 import { api } from "../api/client";
-import { errorMessage, useAsync, useScrollPreserve } from "../hooks";
-import { displayName, equipmentLabel, searchKey } from "../lib/format";
+import { useAsync, useScrollPreserve } from "../hooks";
+import { displayName, searchKey } from "../lib/format";
 import { exportToCsv } from "../lib/csv";
 import { toMap } from "../lib/lookups";
 import { assignmentColumns, assignmentRow } from "../tables/assignments";
 import { incidentColumns, incidentRow } from "../tables/incidents";
 import { ErrorState, Loading } from "../components/Feedback";
 import { Page } from "../components/Page";
-import type { Operator, Specs } from "../types";
 
 type View = "assignments" | "operators" | "equipment" | "incidents";
 
@@ -40,12 +39,31 @@ export function DashboardScreen() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [page, setPage] = useState(0);
   const { capture: captureScroll, restore: restoreScroll } = useScrollPreserve();
+  const viewMenuRef = useRef<HTMLDivElement>(null);
+  const viewMenuId = useId();
+
   useEffect(() => {
     setPage(0);
   }, [view, search]);
   useEffect(() => {
     restoreScroll();
   }, [page, restoreScroll]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onMouseDown = (event: MouseEvent) => {
+      if (!viewMenuRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onMouseDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onMouseDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
 
   if (loading && !data) return <Loading />;
   if (error) return <ErrorState message={error} onRetry={reload} />;
@@ -68,7 +86,7 @@ export function DashboardScreen() {
         const equipment = equipmentById.get(assignment.equipment_id);
         const operator = operatorById.get(assignment.operator_id);
         return searchKey(
-          `${equipment?.brand ?? ""} ${equipment?.model ?? ""} ${operator?.name ?? ""}`,
+          `${equipment?.brand ?? ""} ${equipment?.model ?? ""} ${equipment?.serial ?? ""} ${operator?.name ?? ""}`,
         ).includes(term);
       })
       .map((assignment) =>
@@ -107,18 +125,18 @@ export function DashboardScreen() {
       .map((item) => {
         const spec = item.specs_id != null ? specsById.get(item.specs_id) : undefined;
         return {
-        id: String(item.id),
-        equipo: `${item.brand} ${item.model}`,
-        serial: item.serial,
-        cpu: spec ? `${spec.cpu.brand} ${spec.cpu.model}` : "",
-        ram: spec ? `${spec.ram.capacity.value} ${spec.ram.capacity.unit} ${spec.ram.mode}` : "",
-        almacenamiento: spec ? `${spec.storage.capacity.value} ${spec.storage.capacity.unit} ${spec.storage.type}` : "",
-        graficos: spec ? `${spec.graphics.brand} ${spec.graphics.model} (${spec.graphics.type})` : "",
-        estado: data.assignments.some(
-          (assignment) => assignment.equipment_id === item.id && assignment.status === "active",
-        )
-          ? "Asignado"
-          : "Disponible",
+          id: String(item.id),
+          equipo: `${item.brand} ${item.model}`.trim() || "—",
+          serial: item.serial || "—",
+          cpu: spec ? `${spec.cpu.brand} ${spec.cpu.model}`.trim() || "—" : "—",
+          ram: spec ? `${spec.ram.capacity.value} ${spec.ram.capacity.unit} ${spec.ram.mode}`.trim() || "—" : "—",
+          almacenamiento: spec ? `${spec.storage.capacity.value} ${spec.storage.capacity.unit} ${spec.storage.type}`.trim() || "—" : "—",
+          graficos: spec ? `${spec.graphics.brand} ${spec.graphics.model} (${spec.graphics.type})`.trim() || "—" : "—",
+          estado: data.assignments.some(
+            (assignment) => assignment.equipment_id === item.id && assignment.status === "active",
+          )
+            ? "Asignado"
+            : "Disponible",
         };
       });
   } else {
@@ -205,30 +223,38 @@ export function DashboardScreen() {
                   disabled={selectedIds.length === 0}
                   onClick={exportCsv}
                 />
-                <div className="relative">
+                <div ref={viewMenuRef} className="relative">
                   <DropdownButton
-                  label={viewLabels[view]}
-                  open={open}
-                  onClick={() => setOpen((value) => !value)}
-                />
-                {open && (
-                  <div className="absolute right-0 top-[46px] z-10 w-44 rounded-[8px] border border-stroke bg-object p-1 shadow-lg">
-                    {(Object.keys(viewLabels) as View[]).map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        className="flex w-full cursor-pointer rounded-[6px] px-3 py-2 text-left text-sm text-primary transition-colors hover:bg-border/60"
-                        onClick={() => {
-                          setView(option);
-                          setOpen(false);
-                        }}
-                      >
-                        {viewLabels[option]}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+                    label={viewLabels[view]}
+                    open={open}
+                    aria-haspopup="menu"
+                    aria-controls={open ? viewMenuId : undefined}
+                    onClick={() => setOpen((value) => !value)}
+                  />
+                  {open && (
+                    <div
+                      id={viewMenuId}
+                      role="menu"
+                      className="absolute right-0 top-[46px] z-10 w-44 rounded-[8px] border border-stroke bg-object p-1 shadow-lg"
+                    >
+                      {(Object.keys(viewLabels) as View[]).map((option) => (
+                        <button
+                          key={option}
+                          type="button"
+                          role="menuitemradio"
+                          aria-checked={option === view}
+                          className="flex w-full cursor-pointer rounded-[6px] px-3 py-2 text-left text-sm text-primary transition-colors hover:bg-border/60"
+                          onClick={() => {
+                            setView(option);
+                            setOpen(false);
+                          }}
+                        >
+                          {viewLabels[option]}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             }
           />

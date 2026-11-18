@@ -15,3 +15,4 @@ export * from "./Sidebar";
 export * from "./Tab";
 export * from "./Tag";
 export * from "./Textfield";
+export * from "./Tooltip";

@@ -1,4 +1,4 @@
-import type { DataTableColumn, DataTableRow } from "../eq-ui";
+import { Tooltip, type DataTableColumn, type DataTableRow } from "../eq-ui";
 import type { Equipment, Incident, User } from "../types";
 import { equipmentLabel, formatDate, userLabel } from "../lib/format";
 
@@ -23,12 +23,14 @@ export function incidentRow(
   return {
     id: String(incident.id),
     equipo: equipmentLabel(equipment, incident.equipment_id),
-    serial: equipment?.serial ?? "",
-    tipo: incident.type,
-    motivo: (
-      <span className="block w-full truncate" title={incident.reason}>
-        {incident.reason}
-      </span>
+    serial: equipment?.serial || "—",
+    tipo: incident.type || "—",
+    motivo: incident.reason ? (
+      <Tooltip label={incident.reason} className="flex w-full">
+        <span className="block w-full truncate">{incident.reason}</span>
+      </Tooltip>
+    ) : (
+      "—"
     ),
     tecnico: userLabel(lookups.userById.get(incident.technician_id), incident.technician_id),
     estado: incident.status === "open" ? "Abierta" : "Cerrada",

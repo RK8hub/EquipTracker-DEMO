@@ -125,6 +125,7 @@ export function OperatorsScreen() {
     <Page
       title="Operadores"
       subtitle="Personas que reciben equipos y reportan incidencias."
+      fluid
     >
       <Header
         variant="crud"
@@ -135,6 +136,7 @@ export function OperatorsScreen() {
         }}
         actionProps={{
           onAdd: () => setForm({ ...emptyForm }),
+          addLabel: "Crear operador",
           onDelete: () =>
             selected.length
               ? setConfirmDelete(true)
@@ -163,7 +165,7 @@ export function OperatorsScreen() {
           Sin operadores registrados.
         </p>
       ) : (
-        <div className="flex flex-wrap gap-15 justify-start items-center ">
+        <div className="grid justify-between items-center gap-x-12 2xl:gap-x-15 gap-y-15 [grid-template-columns:repeat(auto-fill,200px)]">
           {filtered.map((operator) => (
             <CardOperador
               key={operator.id}

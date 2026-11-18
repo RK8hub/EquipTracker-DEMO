@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import { Button, Sidebar, type SidebarItem } from "../eq-ui";
 import { equiptrackerNavigation } from "../eq-ui/domain/navigation";
 import { ModalCard } from "../components/ModalCard";
-import { applyTheme, type Theme } from "../lib/theme";
+import { applyTheme, isDarkSeed, type Theme } from "../lib/theme";
 import { DashboardScreen } from "../screens/Dashboard";
 import { OperatorsScreen } from "../screens/Operators";
 import { EquipmentScreen } from "../screens/Equipment";
@@ -28,6 +28,19 @@ export function DemoApp() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [accent, setAccent] = useState("#0872D8");
   const [introOpen, setIntroOpen] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [viewport, setViewport] = useState(() => ({
+    width: typeof window !== "undefined" ? window.innerWidth : 1280,
+    height: typeof window !== "undefined" ? window.innerHeight : 800,
+  }));
+
+  useEffect(() => {
+    const update = () =>
+      setViewport({ width: window.innerWidth, height: window.innerHeight });
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   function closeIntro() {
     setIntroOpen(false);
@@ -35,6 +48,28 @@ export function DemoApp() {
 
   function reset() {
     window.location.reload();
+  }
+
+  const shortSide = Math.min(viewport.width, viewport.height);
+  const longSide = Math.max(viewport.width, viewport.height);
+  const isPhoneLike = shortSide < 600 || longSide < 1024;
+  const rotateScreen = !isPhoneLike && viewport.height > viewport.width;
+
+  if (rotateScreen || isPhoneLike) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-6">
+        <div className="w-full max-w-md rounded-[24px] border-2 border-stroke bg-object p-6 text-center text-primary">
+          <h1 className="text-xl font-semibold">
+            {rotateScreen ? "Rota la pantalla" : "Resolución no compatible"}
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {rotateScreen
+              ? "Gira tu dispositivo a horizontal para usar EquipTracker en esta pantalla."
+              : "EquipTracker está diseñado para PC y tablets. Esta resolución de pantalla no es compatible."}
+          </p>
+        </div>
+      </div>
+    );
   }
 
   const items: SidebarItem[] = equiptrackerNavigation.map((item) => ({
@@ -55,13 +90,19 @@ export function DemoApp() {
         theme={theme}
         accent={accent}
         onCompanyChange={setCompanyName}
-        onThemeChange={setTheme}
+        onThemeChange={(value) => {
+          setTheme(value);
+          applyTheme(value, accent);
+        }}
         onAccentChange={(value) => {
           setAccent(value);
           applyTheme(theme, value);
         }}
       />
     );
+
+  const toasterTheme =
+    theme === "light" ? "light" : theme === "dark" ? "dark" : isDarkSeed(accent) ? "dark" : "light";
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-background">
@@ -72,6 +113,8 @@ export function DemoApp() {
           workspace={{ name: "EquipTracker", company: companyName || "demo.local" }}
           user={{ name: "Administrador", email: "admin@demo.local" }}
           items={items}
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed((value) => !value)}
           onNavigate={(id) => setPage(id as PageId)}
           onUserClick={() => setPage("ajustes")}
           onWorkspaceClick={() => setPage("usuarios")}
@@ -79,11 +122,7 @@ export function DemoApp() {
         <main className="flex-1 overflow-y-auto p-8">{screen}</main>
       </div>
 
-      <Toaster
-        theme={theme === "light" ? "light" : "dark"}
-        richColors
-        position="top-right"
-      />
+      <Toaster theme={toasterTheme} richColors position="top-right" />
 
       {introOpen && (
         <ModalCard

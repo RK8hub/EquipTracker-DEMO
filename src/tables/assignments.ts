@@ -23,7 +23,7 @@ export function assignmentRow(
   return {
     id: String(assignment.id),
     equipo: equipmentLabel(equipment, assignment.equipment_id),
-    serial: equipment?.serial ?? "",
+    serial: equipment?.serial || "—",
     operador: operatorLabel(lookups.operatorById.get(assignment.operator_id), assignment.operator_id),
     asignador: lookups.userById.get(assignment.assigned_by)?.email
       ? displayName(lookups.userById.get(assignment.assigned_by)!.email)

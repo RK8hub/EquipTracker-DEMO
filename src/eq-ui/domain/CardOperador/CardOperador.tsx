@@ -30,7 +30,7 @@ export function CardOperador({
   const visibleTags = tags.filter((tag) => Number(tag.quantity) > 0);
   const parts = name.trim().split(/\s+/);
   const shortName =
-    parts.length > 2 ? `${parts[0]} ${parts[parts.length - 1]}` : name;
+    parts.length > 2 ? `${parts[0]} ${parts[2]}` : name;
 
   return (
     <div className={cn("eq-card-operador", className)} {...props}>

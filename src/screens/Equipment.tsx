@@ -8,9 +8,9 @@ import {
   Textfield,
 } from "../eq-ui";
 import { SortDropdown } from "../components/SortDropdown";
-import { searchKey } from "../lib/format";
 import { api } from "../api/client";
 import { errorMessage, useAsync, useSort } from "../hooks";
+import { searchKey } from "../lib/format";
 import { toMap } from "../lib/lookups";
 import { ErrorState, Loading } from "../components/Feedback";
 import { ModalCard } from "../components/ModalCard";
@@ -88,7 +88,9 @@ export function EquipmentScreen() {
       const operator = assignment
         ? data.operators.find((item) => item.id === assignment.operator_id)
         : undefined;
-      return searchKey(`${equipment.serial} ${operator?.name ?? ""}`).includes(term);
+      return searchKey(
+        `${equipment.serial} ${equipment.brand} ${equipment.model} ${operator?.name ?? ""}`,
+      ).includes(term);
     })
     .sort((a, b) => {
       const operatorName = (equipmentId: number) => {
@@ -195,16 +197,18 @@ export function EquipmentScreen() {
     <Page
       title="Equipos"
       subtitle="Inventario de equipos registrados y su asignación actual."
+      fluid
     >
       <Header
         variant="crud"
         searchProps={{
-          placeholder: "Buscar por serial u operador...",
+          placeholder: "Buscar equipos...",
           value: search,
           onChange: (event) => setSearch(event.target.value),
         }}
         actionProps={{
           onAdd: () => setForm({ ...emptyForm }),
+          addLabel: "Crear equipo",
           onDelete: () =>
             selected.length
               ? setConfirmDelete(true)
@@ -234,7 +238,7 @@ export function EquipmentScreen() {
           Sin equipos registrados.
         </p>
       ) : (
-        <div className="flex flex-wrap gap-10 justify-start items-center">
+        <div className="grid justify-between items-center gap-x-7 2xl:gap-x-20 gap-y-10 [grid-template-columns:repeat(auto-fill,300px)]">
           {filtered.map((equipment) => {
             const active = activeAssignmentByEquipment.get(equipment.id);
             const operatorName = active

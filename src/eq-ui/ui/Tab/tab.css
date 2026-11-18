@@ -4,8 +4,18 @@
   @apply flex h-8 w-full max-w-[240px] cursor-pointer items-center justify-between gap-2 rounded-[8px] px-2 py-2 text-sm font-normal text-foreground outline-none transition-colors;
 }
 
-.eq-tab:hover {
-  @apply bg-border/60;
+.eq-tab--collapsed {
+  @apply max-w-none justify-center px-0;
+}
+
+.eq-tab--collapsed .eq-tab__label {
+  @apply justify-center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .eq-tab:hover {
+    @apply bg-border/60;
+  }
 }
 
 .eq-tab[aria-current="page"] {

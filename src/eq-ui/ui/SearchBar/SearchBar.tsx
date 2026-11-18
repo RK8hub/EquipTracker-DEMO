@@ -12,6 +12,7 @@ export function SearchBar({
   placeholder = "Buscar...",
   className,
   containerClassName,
+  "aria-label": ariaLabel,
   ...props
 }: SearchBarProps) {
   return (
@@ -20,6 +21,7 @@ export function SearchBar({
       <input
         type="search"
         placeholder={placeholder}
+        aria-label={ariaLabel ?? placeholder}
         className={cn("eq-searchbar__control", className)}
         {...props}
       />
