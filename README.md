@@ -6,16 +6,22 @@ persistencia: los datos son ficticios y se cargan desde `src/demo/seed.json`.
 
 Publicada en <https://demo.equiptracker.rk8.dev>.
 
-> Este código fue degradado intencionalmente para servir una demo.
-> No representa la estructura ni la calidad del producto real.
+La interfaz es la misma del cliente de escritorio; solo se sustituye el
+acceso al servidor por un mock en memoria.
 
 ## Qué incluye
 
-- Dashboard, Operadores, Equipos, Asignaciones e Incidencias con datos de
-  ejemplo (50 equipos, 42 operadores, 41 asignaciones, 24 incidencias,
-  4 usuarios y 10 especificaciones).
+- Dashboard, Operadores, Equipos, Asignaciones, Incidencias e Historial con
+  datos de ejemplo (50 equipos, 42 operadores, 41 asignaciones, 24 incidencias,
+  15 instantáneas de historial, 4 usuarios y 10 especificaciones).
+- Ficha de equipo con serial, especificaciones, asignaciones e incidencias del
+  serial, alta de incidencias desde la ficha y columna «Reportado por» con el
+  operador original.
+- Historial de solo lectura agrupado por Origen (asignaciones e incidencias
+  cerradas), con filtros por origen y serial.
 - Alta, edición y eliminación en memoria, con un máximo de 5 elementos
-  nuevos por sección.
+  nuevos por sección. Cerrar una asignación o incidencia genera una
+  instantánea nueva en el historial.
 - Ajustes con tema (Oscuro, Claro, Dinámico) y nombre de empresa.
 - Reinicio automático a los 12 minutos o manual desde el banner.
 

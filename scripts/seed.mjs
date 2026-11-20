@@ -212,12 +212,59 @@ incidents.push(
   },
 );
 
-const seed = { specs, equipment, operators, users, assignments, incidents };
+const eqById = new Map(equipment.map((item) => [item.id, item]));
+const operatorById = new Map(operators.map((item) => [item.id, item]));
+const userById = new Map(users.map((item) => [item.id, item]));
+const eqLabel = (item) => (item ? `${item.brand} ${item.model} · ${item.serial}` : "");
+
+for (const incident of incidents) {
+  const matches = assignments.filter((item) => item.equipment_id === incident.equipment_id);
+  const original = matches.find((item) => item.status === "active") ?? matches.at(-1);
+  incident.reported_by_original = original?.operator_id ?? incident.reported_by;
+}
+// Un operador distinto reporta una incidencia del equipo asignado a otro.
+incidents.find((item) => item.id === 21).reported_by = 37;
+
+const history = [];
+for (const item of assignments) {
+  if (item.status !== "inactive") continue;
+  const eq = eqById.get(item.equipment_id);
+  history.push({
+    origen: "assignment",
+    fecha: item.returned_at ?? item.assigned_at,
+    serial: eq?.serial ?? "",
+    equipo: eqLabel(eq),
+    operador: operatorById.get(item.operator_id)?.name ?? `Operador #${item.operator_id}`,
+    tecnico: userById.get(item.assigned_by)?.email ?? "",
+    detalle: `Asignación devuelta · entregada el ${item.assigned_at.slice(0, 10)}`,
+  });
+}
+for (const incident of incidents) {
+  if (incident.status !== "closed") continue;
+  const eq = eqById.get(incident.equipment_id);
+  history.push({
+    origen: "incident",
+    fecha: incident.resolved_at ?? incident.created_at,
+    serial: eq?.serial ?? "",
+    equipo: eqLabel(eq),
+    operador:
+      operatorById.get(incident.reported_by_original)?.name ??
+      `Operador #${incident.reported_by_original}`,
+    tecnico: userById.get(incident.technician_id)?.email ?? "",
+    detalle: `${incident.type} · ${incident.reason}`,
+  });
+}
+history.sort((a, b) => b.fecha.localeCompare(a.fecha));
+history.forEach((entry, index) => {
+  entry.id = index + 1;
+});
+
+const seed = { specs, equipment, operators, users, assignments, incidents, history };
 
 mkdirSync(resolve(root, "src/demo"), { recursive: true });
 writeFileSync(resolve(root, "src/demo/seed.json"), JSON.stringify(seed, null, 2) + "\n");
 
 console.log(
   `seed.json: ${specs.length} specs, ${equipment.length} equipos, ${operators.length} operadores, ` +
-    `${assignments.length} asignaciones, ${incidents.length} incidencias, ${users.length} usuarios`,
+    `${assignments.length} asignaciones, ${incidents.length} incidencias, ${history.length} instantáneas, ${users.length} usuarios`,
 );

@@ -19,4 +19,4 @@ demo pública) siguen sujetas a este aviso.
 Los componentes de terceros (Inter, lucide-react y el resto de dependencias)
 se rigen por sus propias licencias; ver NOTICE.
 
-Última actualización: 13 de noviembre de 2026.
+Última actualización: 20 de noviembre de 2026.

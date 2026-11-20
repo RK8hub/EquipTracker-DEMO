@@ -7,6 +7,8 @@ import { applyTheme, isDarkSeed, type Theme } from "../lib/theme";
 import { DashboardScreen } from "../screens/Dashboard";
 import { OperatorsScreen } from "../screens/Operators";
 import { EquipmentScreen } from "../screens/Equipment";
+import { EquipmentDetailScreen } from "../screens/EquipmentDetail";
+import { HistoryScreen } from "../screens/History";
 import { AssignmentsScreen } from "../screens/Assignments";
 import { IncidentsScreen } from "../screens/Incidents";
 import { UsersScreen } from "../screens/Users";
@@ -19,11 +21,13 @@ type PageId =
   | "equipos"
   | "asignaciones"
   | "incidencias"
+  | "historial"
   | "usuarios"
   | "ajustes";
 
 export function DemoApp() {
   const [page, setPage] = useState<PageId>("dashboard");
+  const [detailId, setDetailId] = useState<number | null>(null);
   const [companyName, setCompanyName] = useState("");
   const [theme, setTheme] = useState<Theme>("dark");
   const [accent, setAccent] = useState("#0872D8");
@@ -41,6 +45,10 @@ export function DemoApp() {
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
+
+  useEffect(() => {
+    setDetailId(null);
+  }, [page]);
 
   function closeIntro() {
     setIntroOpen(false);
@@ -77,13 +85,25 @@ export function DemoApp() {
     active: item.id === page,
   }));
 
-  let screen = <DashboardScreen />;
-  if (page === "operadores") screen = <OperatorsScreen />;
-  else if (page === "equipos") screen = <EquipmentScreen />;
-  else if (page === "asignaciones") screen = <AssignmentsScreen />;
-  else if (page === "incidencias") screen = <IncidentsScreen />;
-  else if (page === "usuarios") screen = <UsersScreen />;
-  else if (page === "ajustes")
+  let screen =
+    detailId !== null ? (
+      <EquipmentDetailScreen equipmentId={detailId} onBack={() => setDetailId(null)} />
+    ) : (
+      <DashboardScreen canExportCsv={false} />
+    );
+  if (detailId === null && page === "operadores") screen = <OperatorsScreen />;
+  else if (detailId === null && page === "equipos")
+    screen = <EquipmentScreen onOpenDetail={setDetailId} />;
+  else if (detailId === null && page === "asignaciones") screen = <AssignmentsScreen />;
+  else if (detailId === null && page === "incidencias") screen = <IncidentsScreen />;
+  else if (detailId === null && page === "historial")
+    screen = (
+      <HistoryScreen
+        historyNotice="Instantáneas inmutables de asignaciones e incidencias cerradas. No se pueden editar ni borrar."
+      />
+    );
+  else if (detailId === null && page === "usuarios") screen = <UsersScreen />;
+  else if (detailId === null && page === "ajustes")
     screen = (
       <SettingsScreen
         companyName={companyName}
@@ -134,7 +154,7 @@ export function DemoApp() {
           <ul className="flex list-disc flex-col gap-1 pl-5 text-sm text-muted-foreground">
             <li>Los datos son inventados y no se guardan en ningún sitio.</li>
             <li>Puedes agregar hasta 5 elementos por sección.</li>
-            <li>La exportación a CSV está deshabilitada.</li>
+            <li>Abre la ficha de un equipo y consulta el historial; la exportación a CSV sigue deshabilitada.</li>
             <li>Los usuarios son simulados; las contraseñas no se aplican.</li>
             <li>Todo se reinicia automáticamente cada 12 minutos.</li>
           </ul>

@@ -8,8 +8,21 @@
   @apply flex w-full items-center justify-between;
 }
 
-.eq-card-equipment__equipment {
-  @apply flex min-w-0 items-center gap-2.5;
+.eq-card-equipment__equipment,
+.eq-card-equipment__open {
+  @apply flex min-w-0 items-center gap-2.5 text-left;
+}
+
+.eq-card-equipment__open {
+  @apply cursor-pointer rounded-[8px] outline-none;
+}
+
+.eq-card-equipment__open:focus-visible {
+  @apply ring-[3px] ring-zinc-400/50;
+}
+
+.eq-card-equipment__serial {
+  @apply max-w-full truncate text-xs font-normal text-muted-foreground;
 }
 
 .eq-card-equipment__avatar {

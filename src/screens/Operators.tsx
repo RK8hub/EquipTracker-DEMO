@@ -1,10 +1,10 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { CardOperador, Header, ModalOperator, Popup } from "../eq-ui";
+import { Button, CardOperador, Header, ModalOperator, Popup } from "../eq-ui";
 import { SortDropdown } from "../components/SortDropdown";
 import { api } from "../api/client";
 import { errorMessage, useAsync, useSort } from "../hooks";
-import { initials, searchKey } from "../lib/format";
+import { initials } from "../lib/format";
 import { ErrorState, Loading } from "../components/Feedback";
 import { Overlay } from "../components/Overlay";
 import { Page } from "../components/Page";
@@ -18,17 +18,24 @@ interface OperatorForm {
 
 const emptyForm: OperatorForm = { name: "", department: "", position: "" };
 
-export function OperatorsScreen() {
+const PAGE_SIZE = 12;
+
+export function OperatorsScreen({ canWrite = true }: { canWrite?: boolean }) {
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
   const { data, loading, error, reload } = useAsync(async () => {
     const [operators, assignments, incidents] = await Promise.all([
-      api.operators.list(0, 1000),
-      api.assignments.list(0, 1000),
-      api.incidents.list(0, 1000),
+      api.operators.paged({ skip: page * PAGE_SIZE, limit: PAGE_SIZE, search }),
+      api.assignments.list(0, 100),
+      api.incidents.list(0, 100),
     ]);
-    return { operators, assignments, incidents };
-  }, []);
+    return { ...operators, assignments, incidents };
+  }, [page, search]);
 
-  const [search, setSearch] = useState("");
+  useEffect(() => {
+    setPage(0);
+  }, [search]);
+
   const { sortBy, sortOpen, select: selectSort, toggle: toggleSort } = useSort<"name" | "department" | "position" | "equipos">("name");
   const [selected, setSelected] = useState<string[]>([]);
   const [form, setForm] = useState<OperatorForm | null>(null);
@@ -48,10 +55,12 @@ export function OperatorsScreen() {
     );
   }
 
-  const term = searchKey(search);
-  const filtered = data.operators
+  const term = search.trim().toLowerCase();
+  const filtered = data.items
     .filter((operator) =>
-      searchKey(`${operator.name} ${operator.department} ${operator.position}`).includes(term),
+      `${operator.name} ${operator.department} ${operator.position}`
+        .toLowerCase()
+        .includes(term),
     )
     .sort((a, b) => {
       if (sortBy === "equipos") {
@@ -128,20 +137,24 @@ export function OperatorsScreen() {
       fluid
     >
       <Header
-        variant="crud"
+        variant={canWrite ? "crud" : "search"}
         searchProps={{
           placeholder: "Buscar operadores...",
           value: search,
           onChange: (event) => setSearch(event.target.value),
         }}
-        actionProps={{
-          onAdd: () => setForm({ ...emptyForm }),
-          addLabel: "Crear operador",
-          onDelete: () =>
-            selected.length
-              ? setConfirmDelete(true)
-              : toast.error("Selecciona al menos un operador."),
-        }}
+        actionProps={
+          canWrite
+            ? {
+                onAdd: () => setForm({ ...emptyForm }),
+                addLabel: "Crear operador",
+                onDelete: () =>
+                  selected.length
+                    ? setConfirmDelete(true)
+                    : toast.error("Selecciona al menos un operador."),
+              }
+            : undefined
+        }
         right={
           <div className="relative">
             <SortDropdown
@@ -189,6 +202,23 @@ export function OperatorsScreen() {
           ))}
         </div>
       )}
+
+      <div className="mt-8 flex items-center justify-center gap-4 text-sm text-muted-foreground">
+        <Button
+          text="Anterior"
+          disabled={page === 0}
+          onClick={() => setPage((value) => Math.max(0, value - 1))}
+        />
+        <span>
+          {data.total} operadores · pág. {page + 1}/
+          {Math.max(1, Math.ceil(data.total / PAGE_SIZE))}
+        </span>
+        <Button
+          text="Siguiente"
+          disabled={(page + 1) * PAGE_SIZE >= data.total}
+          onClick={() => setPage((value) => value + 1)}
+        />
+      </div>
 
       {form && (
         <Overlay onClose={() => !busy && setForm(null)}>

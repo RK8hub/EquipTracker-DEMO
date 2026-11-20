@@ -1,4 +1,4 @@
-import { ChartPie, Handshake, Monitor, Users, Wrench } from "lucide-react";
+import { ChartPie, Handshake, History, Monitor, Users, Wrench } from "lucide-react";
 import type { SidebarItem } from "../ui/Sidebar";
 
 export const equiptrackerNavigation: SidebarItem[] = [
@@ -11,4 +11,5 @@ export const equiptrackerNavigation: SidebarItem[] = [
     icon: <Handshake strokeWidth={1.5} />,
   },
   { id: "incidencias", label: "Incidencias", icon: <Wrench strokeWidth={1.5} /> },
+  { id: "historial", label: "Historial", icon: <History strokeWidth={1.5} /> },
 ];

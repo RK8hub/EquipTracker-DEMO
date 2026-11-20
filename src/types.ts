@@ -9,6 +9,41 @@ export interface TokenResponse {
   token_type: string;
 }
 
+/** Respuesta del backend con el rol y el plan vigentes (fuente de verdad). */
+export interface MeResponse {
+  id?: number;
+  email?: string;
+  role: string;
+  plan?: string;
+  permissions?: Record<string, boolean>;
+}
+
+/** Instantánea inmutable del historial. Los nombres varían según el origen. */
+export interface HistoryEntry {
+  id?: number | string;
+  origen?: "assignment" | "incident" | string;
+  origin?: string;
+  serial?: string;
+  equipo?: string;
+  operador?: string;
+  tecnico?: string;
+  detalle?: string;
+  snapshot?: string;
+  fecha?: string;
+  created_at?: string;
+  [key: string]: unknown;
+}
+
+export interface ExportJob {
+  id?: string | number;
+  job_id?: string | number;
+  status?: string;
+  state?: string;
+  url?: string;
+  download_url?: string;
+  [key: string]: unknown;
+}
+
 export interface Operator {
   id: number;
   name: string;
@@ -122,6 +157,7 @@ export interface Incident {
   technician_id: number;
   created_at: string;
   resolved_at: string | null;
+  reported_by_original?: number | null;
 }
 
 export interface IncidentInput {
@@ -132,6 +168,4 @@ export interface IncidentInput {
   technician_id: number;
 }
 
-export type IncidentUpdate = Partial<
-  Pick<Incident, "type" | "reason" | "status" | "technician_id" | "resolved_at">
->;
+export type IncidentUpdate = Partial<Pick<Incident, "status" | "resolved_at">>;

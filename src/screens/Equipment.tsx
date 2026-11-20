@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Button,
@@ -10,7 +10,6 @@ import {
 import { SortDropdown } from "../components/SortDropdown";
 import { api } from "../api/client";
 import { errorMessage, useAsync, useSort } from "../hooks";
-import { searchKey } from "../lib/format";
 import { toMap } from "../lib/lookups";
 import { ErrorState, Loading } from "../components/Feedback";
 import { ModalCard } from "../components/ModalCard";
@@ -39,26 +38,38 @@ function specsLabel(spec: Specs): string {
   return `#${spec.id} · ${spec.cpu.brand} ${spec.cpu.model} · ${spec.ram.capacity.value}${spec.ram.capacity.unit}`;
 }
 
-export function EquipmentScreen() {
-  const { data, loading, error, reload } = useAsync(async () => {
-    const [equipment, specs, operators, assignments, incidents] =
-      await Promise.all([
-        api.equipment.list(0, 1000),
-        api.specs.list(0, 1000),
-        api.operators.list(0, 1000),
-        api.assignments.list(0, 1000),
-        api.incidents.list(0, 1000),
-      ]);
-    return { equipment, specs, operators, assignments, incidents };
-  }, []);
+export interface EquipmentScreenProps {
+  onOpenDetail: (id: number) => void;
+  canWrite?: boolean;
+}
 
+const PAGE_SIZE = 12;
+
+export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScreenProps) {
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
   const { sortBy, sortOpen, select: selectSort, toggle: toggleSort } = useSort<"modelo" | "serial" | "operador" | "estado" | "incidencias">("modelo");
   const [selected, setSelected] = useState<string[]>([]);
   const [form, setForm] = useState<EquipmentForm | null>(null);
   const [specsOpen, setSpecsOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [busy, setBusy] = useState(false);
+
+  const { data, loading, error, reload } = useAsync(async () => {
+    const [equipment, specs, operators, assignments, incidents] =
+      await Promise.all([
+        api.equipment.paged({ skip: page * PAGE_SIZE, limit: PAGE_SIZE, search }),
+        api.specs.list(0, 100),
+        api.operators.list(0, 100),
+        api.assignments.list(0, 100),
+        api.incidents.list(0, 100),
+      ]);
+    return { ...equipment, specs, operators, assignments, incidents };
+  }, [page, search]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [search]);
 
   if (loading && !data) return <Loading />;
   if (error) return <ErrorState message={error} onRetry={reload} />;
@@ -79,8 +90,8 @@ export function EquipmentScreen() {
     );
   }
 
-  const term = searchKey(search);
-  const filtered = data.equipment
+  const term = search.trim().toLowerCase();
+  const filtered = data.items
     .filter((equipment) => {
       const assignment = data.assignments.find(
         (item) => item.equipment_id === equipment.id && item.status === "active",
@@ -88,9 +99,9 @@ export function EquipmentScreen() {
       const operator = assignment
         ? data.operators.find((item) => item.id === assignment.operator_id)
         : undefined;
-      return searchKey(
-        `${equipment.serial} ${equipment.brand} ${equipment.model} ${operator?.name ?? ""}`,
-      ).includes(term);
+      return `${equipment.serial} ${equipment.brand} ${equipment.model} ${operator?.name ?? ""}`
+        .toLowerCase()
+        .includes(term);
     })
     .sort((a, b) => {
       const operatorName = (equipmentId: number) => {
@@ -206,14 +217,18 @@ export function EquipmentScreen() {
           value: search,
           onChange: (event) => setSearch(event.target.value),
         }}
-        actionProps={{
-          onAdd: () => setForm({ ...emptyForm }),
-          addLabel: "Crear equipo",
-          onDelete: () =>
-            selected.length
-              ? setConfirmDelete(true)
-              : toast.error("Selecciona al menos un equipo."),
-        }}
+        actionProps={
+          canWrite
+            ? {
+                onAdd: () => setForm({ ...emptyForm }),
+                addLabel: "Crear equipo",
+                onDelete: () =>
+                  selected.length
+                    ? setConfirmDelete(true)
+                    : toast.error("Selecciona al menos un equipo."),
+              }
+            : { showDelete: false }
+        }
         right={
           <div className="relative">
             <SortDropdown
@@ -248,28 +263,48 @@ export function EquipmentScreen() {
               <CardEquipment
                 key={equipment.id}
                 name={equipment.model}
+                serial={equipment.serial}
                 operator={`${operatorName}`}
                 incidents={openIncidentsByEquipment.get(equipment.id) ?? 0}
                 selected={selected.includes(String(equipment.id))}
                 onSelectedChange={(checked) =>
                   toggleSelected(String(equipment.id), checked)
                 }
+                onOpen={() => onOpenDetail(equipment.id)}
                 onMore={() =>
-                  setForm({
-                    id: equipment.id,
-                    serial: equipment.serial,
-                    brand: equipment.brand,
-                    model: equipment.model,
-                    specs_id: equipment.specs_id
-                      ? String(equipment.specs_id)
-                      : "",
-                  })
+                  canWrite
+                    ? setForm({
+                        id: equipment.id,
+                        serial: equipment.serial,
+                        brand: equipment.brand,
+                        model: equipment.model,
+                        specs_id: equipment.specs_id
+                          ? String(equipment.specs_id)
+                          : "",
+                      })
+                    : onOpenDetail(equipment.id)
                 }
               />
             );
           })}
         </div>
       )}
+
+      <div className="mt-8 flex items-center justify-center gap-4 text-sm text-muted-foreground">
+        <Button
+          text="Anterior"
+          disabled={page === 0}
+          onClick={() => setPage((value) => Math.max(0, value - 1))}
+        />
+        <span>
+          {data.total} equipos · pág. {page + 1}/{Math.max(1, Math.ceil(data.total / PAGE_SIZE))}
+        </span>
+        <Button
+          text="Siguiente"
+          disabled={(page + 1) * PAGE_SIZE >= data.total}
+          onClick={() => setPage((value) => value + 1)}
+        />
+      </div>
 
       {form && (
         <ModalCard

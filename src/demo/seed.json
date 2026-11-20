@@ -1346,7 +1346,8 @@
       "reported_by": 1,
       "technician_id": 1,
       "created_at": "2026-03-06T11:00:00.000Z",
-      "resolved_at": "2026-03-09T15:00:00.000Z"
+      "resolved_at": "2026-03-09T15:00:00.000Z",
+      "reported_by_original": 1
     },
     {
       "id": 2,
@@ -1357,7 +1358,8 @@
       "reported_by": 3,
       "technician_id": 2,
       "created_at": "2026-03-13T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 3
     },
     {
       "id": 3,
@@ -1368,7 +1370,8 @@
       "reported_by": 5,
       "technician_id": 3,
       "created_at": "2026-03-20T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 5
     },
     {
       "id": 4,
@@ -1379,7 +1382,8 @@
       "reported_by": 7,
       "technician_id": 4,
       "created_at": "2026-03-27T11:00:00.000Z",
-      "resolved_at": "2026-03-30T15:00:00.000Z"
+      "resolved_at": "2026-03-30T15:00:00.000Z",
+      "reported_by_original": 7
     },
     {
       "id": 5,
@@ -1390,7 +1394,8 @@
       "reported_by": 9,
       "technician_id": 1,
       "created_at": "2026-04-03T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 9
     },
     {
       "id": 6,
@@ -1401,7 +1406,8 @@
       "reported_by": 11,
       "technician_id": 2,
       "created_at": "2026-04-10T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 11
     },
     {
       "id": 7,
@@ -1412,7 +1418,8 @@
       "reported_by": 13,
       "technician_id": 3,
       "created_at": "2026-04-17T11:00:00.000Z",
-      "resolved_at": "2026-04-20T15:00:00.000Z"
+      "resolved_at": "2026-04-20T15:00:00.000Z",
+      "reported_by_original": 13
     },
     {
       "id": 8,
@@ -1423,7 +1430,8 @@
       "reported_by": 15,
       "technician_id": 4,
       "created_at": "2026-04-24T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 15
     },
     {
       "id": 9,
@@ -1434,7 +1442,8 @@
       "reported_by": 17,
       "technician_id": 1,
       "created_at": "2026-05-01T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 17
     },
     {
       "id": 10,
@@ -1445,7 +1454,8 @@
       "reported_by": 19,
       "technician_id": 2,
       "created_at": "2026-05-08T11:00:00.000Z",
-      "resolved_at": "2026-05-11T15:00:00.000Z"
+      "resolved_at": "2026-05-11T15:00:00.000Z",
+      "reported_by_original": 19
     },
     {
       "id": 11,
@@ -1456,7 +1466,8 @@
       "reported_by": 21,
       "technician_id": 3,
       "created_at": "2026-05-15T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 21
     },
     {
       "id": 12,
@@ -1467,7 +1478,8 @@
       "reported_by": 23,
       "technician_id": 4,
       "created_at": "2026-05-22T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 23
     },
     {
       "id": 13,
@@ -1478,7 +1490,8 @@
       "reported_by": 25,
       "technician_id": 1,
       "created_at": "2026-05-29T11:00:00.000Z",
-      "resolved_at": "2026-06-01T15:00:00.000Z"
+      "resolved_at": "2026-06-01T15:00:00.000Z",
+      "reported_by_original": 25
     },
     {
       "id": 14,
@@ -1489,7 +1502,8 @@
       "reported_by": 27,
       "technician_id": 2,
       "created_at": "2026-06-05T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 27
     },
     {
       "id": 15,
@@ -1500,7 +1514,8 @@
       "reported_by": 29,
       "technician_id": 3,
       "created_at": "2026-06-12T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 29
     },
     {
       "id": 16,
@@ -1511,7 +1526,8 @@
       "reported_by": 31,
       "technician_id": 4,
       "created_at": "2026-06-19T11:00:00.000Z",
-      "resolved_at": "2026-06-22T15:00:00.000Z"
+      "resolved_at": "2026-06-22T15:00:00.000Z",
+      "reported_by_original": 31
     },
     {
       "id": 17,
@@ -1522,7 +1538,8 @@
       "reported_by": 33,
       "technician_id": 1,
       "created_at": "2026-06-26T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 33
     },
     {
       "id": 18,
@@ -1533,7 +1550,8 @@
       "reported_by": 35,
       "technician_id": 2,
       "created_at": "2026-07-03T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 35
     },
     {
       "id": 19,
@@ -1544,7 +1562,8 @@
       "reported_by": 37,
       "technician_id": 3,
       "created_at": "2026-07-10T11:00:00.000Z",
-      "resolved_at": "2026-07-13T15:00:00.000Z"
+      "resolved_at": "2026-07-13T15:00:00.000Z",
+      "reported_by_original": 37
     },
     {
       "id": 20,
@@ -1555,7 +1574,8 @@
       "reported_by": 39,
       "technician_id": 4,
       "created_at": "2026-07-17T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 39
     },
     {
       "id": 21,
@@ -1563,10 +1583,11 @@
       "type": "Hardware",
       "reason": "Teresa Lisbon le disparó a la laptop",
       "status": "open",
-      "reported_by": 42,
+      "reported_by": 37,
       "technician_id": 2,
       "created_at": "2026-07-24T11:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 42
     },
     {
       "id": 22,
@@ -1577,7 +1598,8 @@
       "reported_by": 38,
       "technician_id": 3,
       "created_at": "2026-07-26T10:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 38
     },
     {
       "id": 23,
@@ -1588,7 +1610,8 @@
       "reported_by": 39,
       "technician_id": 4,
       "created_at": "2026-07-29T15:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 39
     },
     {
       "id": 24,
@@ -1599,7 +1622,160 @@
       "reported_by": 37,
       "technician_id": 2,
       "created_at": "2026-08-01T09:00:00.000Z",
-      "resolved_at": null
+      "resolved_at": null,
+      "reported_by_original": 37
+    }
+  ],
+  "history": [
+    {
+      "origen": "assignment",
+      "fecha": "2026-10-16T16:00:00.000Z",
+      "serial": "EQ-2022-0040",
+      "equipo": "Asus ProArt Studiobook 16 · EQ-2022-0040",
+      "operador": "Juan Manuel Caldera",
+      "tecnico": "admin@demo.local",
+      "detalle": "Asignación devuelta · entregada el 2026-09-26",
+      "id": 1
+    },
+    {
+      "origen": "assignment",
+      "fecha": "2026-09-16T16:00:00.000Z",
+      "serial": "EQ-2023-0035",
+      "equipo": "Acer Aspire 5 · EQ-2023-0035",
+      "operador": "John Doe",
+      "tecnico": "admin@demo.local",
+      "detalle": "Asignación devuelta · entregada el 2026-08-27",
+      "id": 2
+    },
+    {
+      "origen": "assignment",
+      "fecha": "2026-08-17T16:00:00.000Z",
+      "serial": "EQ-2024-0030",
+      "equipo": "Apple MacBook Air M2 · EQ-2024-0030",
+      "operador": "Emilio Zapata",
+      "tecnico": "admin@demo.local",
+      "detalle": "Asignación devuelta · entregada el 2026-07-28",
+      "id": 3
+    },
+    {
+      "origen": "assignment",
+      "fecha": "2026-07-18T16:00:00.000Z",
+      "serial": "EQ-2022-0025",
+      "equipo": "Dell Latitude 5430 · EQ-2022-0025",
+      "operador": "Teresa Solís",
+      "tecnico": "admin@demo.local",
+      "detalle": "Asignación devuelta · entregada el 2026-06-28",
+      "id": 4
+    },
+    {
+      "origen": "incident",
+      "fecha": "2026-07-13T15:00:00.000Z",
+      "serial": "EQ-2022-0037",
+      "equipo": "Dell Precision 3560 · EQ-2022-0037",
+      "operador": "Victor von Doom",
+      "tecnico": "soporte2@demo.local",
+      "detalle": "Red · Impresora no responde",
+      "id": 5
+    },
+    {
+      "origen": "incident",
+      "fecha": "2026-06-22T15:00:00.000Z",
+      "serial": "EQ-2022-0031",
+      "equipo": "Dell OptiPlex 7000 · EQ-2022-0031",
+      "operador": "Patricia Luna",
+      "tecnico": "sistemas@demo.local",
+      "detalle": "Periférico · Sobrecalentamiento",
+      "id": 6
+    },
+    {
+      "origen": "assignment",
+      "fecha": "2026-06-18T16:00:00.000Z",
+      "serial": "EQ-2023-0020",
+      "equipo": "HP ZBook Firefly 14 · EQ-2023-0020",
+      "operador": "Óscar Delgado",
+      "tecnico": "admin@demo.local",
+      "detalle": "Asignación devuelta · entregada el 2026-05-29",
+      "id": 7
+    },
+    {
+      "origen": "incident",
+      "fecha": "2026-06-01T15:00:00.000Z",
+      "serial": "EQ-2022-0025",
+      "equipo": "Dell Latitude 5430 · EQ-2022-0025",
+      "operador": "Teresa Solís",
+      "tecnico": "admin@demo.local",
+      "detalle": "Hardware · Disco lleno",
+      "id": 8
+    },
+    {
+      "origen": "assignment",
+      "fecha": "2026-05-19T16:00:00.000Z",
+      "serial": "EQ-2024-0015",
+      "equipo": "Lenovo IdeaPad 3 · EQ-2024-0015",
+      "operador": "Paola Guzmán",
+      "tecnico": "admin@demo.local",
+      "detalle": "Asignación devuelta · entregada el 2026-04-29",
+      "id": 9
+    },
+    {
+      "origen": "incident",
+      "fecha": "2026-05-11T15:00:00.000Z",
+      "serial": "EQ-2022-0019",
+      "equipo": "Dell Vostro 3520 · EQ-2022-0019",
+      "operador": "Isabel Cárdenas",
+      "tecnico": "soporte1@demo.local",
+      "detalle": "Software · Actualización fallida",
+      "id": 10
+    },
+    {
+      "origen": "incident",
+      "fecha": "2026-04-20T15:00:00.000Z",
+      "serial": "EQ-2022-0013",
+      "equipo": "Dell Precision 3560 · EQ-2022-0013",
+      "operador": "Daniela Méndez",
+      "tecnico": "soporte2@demo.local",
+      "detalle": "Red · Batería no carga",
+      "id": 11
+    },
+    {
+      "origen": "assignment",
+      "fecha": "2026-04-19T16:00:00.000Z",
+      "serial": "EQ-2022-0010",
+      "equipo": "Asus VivoBook 15 · EQ-2022-0010",
+      "operador": "Andrés Palacios",
+      "tecnico": "admin@demo.local",
+      "detalle": "Asignación devuelta · entregada el 2026-03-30",
+      "id": 12
+    },
+    {
+      "origen": "incident",
+      "fecha": "2026-03-30T15:00:00.000Z",
+      "serial": "EQ-2022-0007",
+      "equipo": "Dell OptiPlex 7000 · EQ-2022-0007",
+      "operador": "Sofía Ramírez",
+      "tecnico": "sistemas@demo.local",
+      "detalle": "Periférico · No conecta a la red",
+      "id": 13
+    },
+    {
+      "origen": "assignment",
+      "fecha": "2026-03-20T16:00:00.000Z",
+      "serial": "EQ-2023-0005",
+      "equipo": "Acer TravelMate P2 · EQ-2023-0005",
+      "operador": "Lucía Herrera",
+      "tecnico": "admin@demo.local",
+      "detalle": "Asignación devuelta · entregada el 2026-02-28",
+      "id": 14
+    },
+    {
+      "origen": "incident",
+      "fecha": "2026-03-09T15:00:00.000Z",
+      "serial": "EQ-2022-0001",
+      "equipo": "Lenovo ThinkPad T480 · EQ-2022-0001",
+      "operador": "Raúl Emmanuel Aguilar González",
+      "tecnico": "admin@demo.local",
+      "detalle": "Hardware · No enciende",
+      "id": 15
     }
   ]
 }
