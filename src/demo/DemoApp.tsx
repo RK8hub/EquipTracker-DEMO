@@ -8,6 +8,7 @@ import { DashboardScreen } from "../screens/Dashboard";
 import { OperatorsScreen } from "../screens/Operators";
 import { EquipmentScreen } from "../screens/Equipment";
 import { EquipmentDetailScreen } from "../screens/EquipmentDetail";
+import { OperatorDetailScreen } from "../screens/OperatorDetail";
 import { HistoryScreen } from "../screens/History";
 import { AssignmentsScreen } from "../screens/Assignments";
 import { IncidentsScreen } from "../screens/Incidents";
@@ -28,6 +29,7 @@ type PageId =
 export function DemoApp() {
   const [page, setPage] = useState<PageId>("dashboard");
   const [detailId, setDetailId] = useState<number | null>(null);
+  const [operatorDetailId, setOperatorDetailId] = useState<number | null>(null);
   const [companyName, setCompanyName] = useState("");
   const [theme, setTheme] = useState<Theme>("dark");
   const [accent, setAccent] = useState("#0872D8");
@@ -48,6 +50,7 @@ export function DemoApp() {
 
   useEffect(() => {
     setDetailId(null);
+    setOperatorDetailId(null);
   }, [page]);
 
   function closeIntro() {
@@ -88,23 +91,29 @@ export function DemoApp() {
   let screen =
     detailId !== null ? (
       <EquipmentDetailScreen equipmentId={detailId} onBack={() => setDetailId(null)} />
+    ) : operatorDetailId !== null ? (
+      <OperatorDetailScreen
+        operatorId={operatorDetailId}
+        onBack={() => setOperatorDetailId(null)}
+      />
     ) : (
       <DashboardScreen canExportCsv={false} />
     );
-  if (detailId === null && page === "operadores")
-    screen = <OperatorsScreen onOpenDetail={setDetailId} />;
-  else if (detailId === null && page === "equipos")
+  const detailOpen = detailId !== null || operatorDetailId !== null;
+  if (!detailOpen && page === "operadores")
+    screen = <OperatorsScreen onOpenOperator={setOperatorDetailId} />;
+  else if (!detailOpen && page === "equipos")
     screen = <EquipmentScreen onOpenDetail={setDetailId} />;
-  else if (detailId === null && page === "asignaciones") screen = <AssignmentsScreen />;
-  else if (detailId === null && page === "incidencias") screen = <IncidentsScreen />;
-  else if (detailId === null && page === "historial")
+  else if (!detailOpen && page === "asignaciones") screen = <AssignmentsScreen />;
+  else if (!detailOpen && page === "incidencias") screen = <IncidentsScreen />;
+  else if (!detailOpen && page === "historial")
     screen = (
       <HistoryScreen
-        historyNotice="Instantáneas inmutables de asignaciones e incidencias cerradas. No se pueden editar ni borrar."
+        historyNotice="El historial guarda instantáneas inmutables; la trazabilidad disponible depende del plan."
       />
     );
-  else if (detailId === null && page === "usuarios") screen = <UsersScreen />;
-  else if (detailId === null && page === "ajustes")
+  else if (!detailOpen && page === "usuarios") screen = <UsersScreen />;
+  else if (!detailOpen && page === "ajustes")
     screen = (
       <SettingsScreen
         companyName={companyName}

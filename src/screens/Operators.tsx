@@ -1,14 +1,11 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { Monitor } from "lucide-react";
 import { Button, CardOperador, Header, ModalOperator, Popup } from "../eq-ui";
 import { SortDropdown } from "../components/SortDropdown";
 import { api } from "../api/client";
 import { errorMessage, useAsync, useSort } from "../hooks";
-import { equipmentLabel, initials } from "../lib/format";
-import { toMap } from "../lib/lookups";
+import { initials } from "../lib/format";
 import { ErrorState, Loading } from "../components/Feedback";
-import { ModalCard } from "../components/ModalCard";
 import { Overlay } from "../components/Overlay";
 import { Page } from "../components/Page";
 
@@ -24,22 +21,19 @@ const emptyForm: OperatorForm = { name: "", department: "", position: "" };
 const PAGE_SIZE = 12;
 
 export interface OperatorsScreenProps {
-  onOpenDetail: (id: number) => void;
+  onOpenOperator: (id: number) => void;
   canWrite?: boolean;
 }
 
-export function OperatorsScreen({ onOpenDetail, canWrite = true }: OperatorsScreenProps) {
+export function OperatorsScreen({ onOpenOperator, canWrite = true }: OperatorsScreenProps) {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
-  const [detailId, setDetailId] = useState<number | null>(null);
   const { data, loading, error, reload } = useAsync(async () => {
-    const [operators, assignments, incidents, equipment] = await Promise.all([
+    const [operators, assignments] = await Promise.all([
       api.operators.paged({ skip: page * PAGE_SIZE, limit: PAGE_SIZE, search }),
       api.assignments.list(0, 100),
-      api.incidents.list(0, 100),
-      api.equipment.list(0, 100),
     ]);
-    return { ...operators, assignments, incidents, equipment };
+    return { ...operators, assignments };
   }, [page, search]);
 
   useEffect(() => {
@@ -65,11 +59,6 @@ export function OperatorsScreen({ onOpenDetail, canWrite = true }: OperatorsScre
     );
   }
 
-  const equipmentById = toMap(data.equipment);
-  const detailOperator = data.items.find((item) => item.id === detailId);
-  const detailEquipment = data.assignments.filter(
-    (assignment) => assignment.status === "active" && assignment.operator_id === detailId,
-  );
   const filtered = [...data.items].sort((a, b) => {
       if (sortBy === "equipos") {
         return (activeByOperator.get(a.id) ?? 0) - (activeByOperator.get(b.id) ?? 0);
@@ -198,7 +187,7 @@ export function OperatorsScreen({ onOpenDetail, canWrite = true }: OperatorsScre
               onSelectedChange={(checked) =>
                 toggleSelected(String(operator.id), checked)
               }
-              onOpen={() => setDetailId(operator.id)}
+              onOpen={() => onOpenOperator(operator.id)}
               onMore={() =>
                 setForm({
                   id: operator.id,
@@ -253,55 +242,6 @@ export function OperatorsScreen({ onOpenDetail, canWrite = true }: OperatorsScre
             onCancel={() => setForm(null)}
           />
         </Overlay>
-      )}
-
-      {detailOperator && (
-        <ModalCard
-          title={detailOperator.name}
-          description={`${detailOperator.department} · ${detailOperator.position}`}
-          onClose={() => setDetailId(null)}
-          footer={
-            <Button
-              text="Editar operador"
-              variant="primary"
-              onClick={() => {
-                setForm({
-                  id: detailOperator.id,
-                  name: detailOperator.name,
-                  department: detailOperator.department,
-                  position: detailOperator.position,
-                });
-                setDetailId(null);
-              }}
-            />
-          }
-        >
-          <p className="text-sm font-medium">Equipos activos</p>
-          {detailEquipment.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Sin equipos asignados.</p>
-          ) : (
-            <ul className="flex flex-col gap-2">
-              {detailEquipment.map((assignment) => {
-                const equipment = equipmentById.get(assignment.equipment_id);
-                return (
-                  <li key={assignment.id}>
-                    <button
-                      type="button"
-                      className="flex w-full items-center gap-2 rounded-[10px] border border-stroke px-3 py-2 text-left text-sm transition-colors hover:bg-border/60"
-                      onClick={() => {
-                        setDetailId(null);
-                        if (equipment) onOpenDetail(equipment.id);
-                      }}
-                    >
-                      <Monitor aria-hidden="true" className="size-4 shrink-0" />
-                      {equipmentLabel(equipment, assignment.equipment_id)}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </ModalCard>
       )}
 
       {confirmDelete && (

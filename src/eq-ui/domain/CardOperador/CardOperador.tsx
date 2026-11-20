@@ -56,7 +56,7 @@ export function CardOperador({
       <button
         type="button"
         className="eq-card-operador__open"
-        aria-label={`Ver equipos de ${name}`}
+        aria-label={`Abrir ficha de ${name}`}
         onClick={onOpen}
       >
         <div className="eq-card-operador__avatar">{initials}</div>
@@ -65,7 +65,7 @@ export function CardOperador({
           <span className="eq-card-operador__name" title={name}>{shortName}</span>
           <span className="eq-card-operador__area">{area}</span>
           <span className="eq-card-operador__hint">
-            Ver equipos
+            Ver ficha
             <ChevronRight aria-hidden="true" />
           </span>
         </div>

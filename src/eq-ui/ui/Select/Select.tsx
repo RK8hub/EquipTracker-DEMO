@@ -10,6 +10,7 @@ import { createPortal } from "react-dom";
 import { DropdownButton } from "../DropdownButton/DropdownButton";
 import { Tooltip } from "../Tooltip";
 import { cn } from "../../lib/cn";
+import { searchKey } from "../../../lib/format";
 import "./select.css";
 
 // Registro global para que solo un Select esté abierto a la vez.
@@ -33,6 +34,8 @@ export interface SelectFieldProps {
   /** Muestra un campo de búsqueda dentro del dropdown para filtrar escribiendo. */
   searchable?: boolean;
   searchPlaceholder?: string;
+  /** Texto del tooltip que se muestra al pasar el cursor por el selector. */
+  tooltip?: string;
 }
 
 export function SelectField({
@@ -46,6 +49,7 @@ export function SelectField({
   className,
   searchable = false,
   searchPlaceholder = "Buscar...",
+  tooltip,
 }: SelectFieldProps) {
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(-1);
@@ -58,15 +62,10 @@ export function SelectField({
   const selected = options.find((o) => o.value === value);
   const displayLabel = selected ? selected.label : (placeholder ?? "");
 
-  const normalize = (value: string) =>
-    value
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-  const term = normalize(query.trim());
+  const term = searchKey(query.trim());
   const filtered =
     searchable && term
-      ? options.filter((o) => normalize(o.search ?? o.label).includes(term))
+      ? options.filter((o) => searchKey(o.search ?? o.label).includes(term))
       : options;
   const items =
     placeholder && !(searchable && term)
@@ -164,22 +163,26 @@ export function SelectField({
 
   const id = useId();
 
+  const trigger = (
+    <DropdownButton
+      label={displayLabel}
+      open={open}
+      disabled={disabled}
+      onClick={() => {
+        if (disabled) return;
+        if (!open) openList();
+        else setOpen(false);
+      }}
+      onKeyDown={onKeyDown}
+      className="w-full justify-between"
+    />
+  );
+
   return (
     <label className={cn("flex flex-col gap-1", className)}>
       <span className="text-base font-normal text-primary">{label}</span>
       <div ref={triggerRef} className="w-full">
-        <DropdownButton
-          label={displayLabel}
-          open={open}
-          disabled={disabled}
-          onClick={() => {
-            if (disabled) return;
-            if (!open) openList();
-            else setOpen(false);
-          }}
-          onKeyDown={onKeyDown}
-          className="w-full justify-between"
-        />
+        {tooltip ? <Tooltip label={tooltip} className="w-full">{trigger}</Tooltip> : trigger}
       </div>
       {required && <input type="hidden" value={value} required />}
       {open &&

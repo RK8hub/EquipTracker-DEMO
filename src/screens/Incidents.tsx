@@ -180,6 +180,9 @@ export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
               <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                 <SelectField
                   label="Reportado por"
+                  searchable
+                  searchPlaceholder="Escribe el nombre del operador"
+                  tooltip="Filtra por el operador que reportó la incidencia"
                   value={operatorFilter}
                   onChange={setOperatorFilter}
                   options={data.operators.map((operator) => ({
@@ -190,6 +193,7 @@ export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
                 />
                 <SelectField
                   label="Estado"
+                  tooltip="Filtra por el estado de la incidencia"
                   value={statusFilter}
                   onChange={setStatusFilter}
                   options={[

@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, FileSpreadsheet } from "lucide-react";
+import {
+  ArrowLeft,
+  Cpu,
+  FileSpreadsheet,
+  HardDrive,
+  MemoryStick,
+  MonitorCog,
+  type LucideIcon,
+} from "lucide-react";
 import {
   Button,
+  cn,
   DataTable,
   type DataTableColumn,
   type DataTableRow,
@@ -24,21 +33,24 @@ export interface EquipmentDetailProps {
   historyNotice?: string;
 }
 
-function specLines(spec: Specs | null): { label: string; value: string }[] {
+function specLines(spec: Specs | null): { label: string; value: string; Icon: LucideIcon }[] {
   if (!spec) return [];
   return [
-    { label: "CPU", value: `${spec.cpu.brand} ${spec.cpu.model}`.trim() },
+    { label: "CPU", value: `${spec.cpu.brand} ${spec.cpu.model}`.trim(), Icon: Cpu },
     {
       label: "RAM",
       value: `${spec.ram.capacity.value} ${spec.ram.capacity.unit} · ${spec.ram.mode}`,
+      Icon: MemoryStick,
     },
     {
       label: "Almacenamiento",
       value: `${spec.storage.capacity.value} ${spec.storage.capacity.unit} · ${spec.storage.type}`,
+      Icon: HardDrive,
     },
     {
       label: "Gráficos",
       value: `${spec.graphics.brand} ${spec.graphics.model} · ${spec.graphics.type}`,
+      Icon: MonitorCog,
     },
   ];
 }
@@ -68,6 +80,7 @@ export function EquipmentDetailScreen({
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (!data) return null;
 
+  const lines = specLines(data.spec);
   const operatorById = toMap(data.operators);
   const equipmentById = toMap([data.equipment]);
   const userById = toMap(data.users);
@@ -150,16 +163,34 @@ export function EquipmentDetailScreen({
 
         <section className="rounded-[24px] border border-stroke bg-card p-6">
           <h2 className="text-lg font-semibold">Especificaciones</h2>
-          {specLines(data.spec).length === 0 ? (
+          {lines.length === 0 ? (
             <p className="mt-2 text-sm text-muted-foreground">
               Este equipo no tiene especificaciones registradas.
             </p>
           ) : (
-            <dl className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
-              {specLines(data.spec).map((line) => (
-                <div key={line.label}>
-                  <dt className="text-xs text-muted-foreground">{line.label}</dt>
-                  <dd className="text-sm text-primary">{line.value || "—"}</dd>
+            <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {lines.map(({ label, value, Icon }, index) => (
+                <div key={label} className="flex min-w-0 items-center gap-3">
+                  {index > 0 && (
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "hidden text-2xl font-light leading-none text-stroke",
+                        index === 2 ? "lg:block" : "sm:block",
+                      )}
+                    >
+                      |
+                    </span>
+                  )}
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full border border-stroke bg-object text-primary">
+                    <Icon aria-hidden="true" className="size-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <dt className="text-xs text-muted-foreground">{label}</dt>
+                    <dd className="truncate text-sm text-primary" title={value || undefined}>
+                      {value || "—"}
+                    </dd>
+                  </div>
                 </div>
               ))}
             </dl>

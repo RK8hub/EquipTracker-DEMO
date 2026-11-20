@@ -220,6 +220,9 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
               <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                 <SelectField
                   label="Operador"
+                  searchable
+                  searchPlaceholder="Escribe el nombre del operador"
+                  tooltip="Filtra por operador asignado"
                   value={operatorFilter}
                   onChange={setOperatorFilter}
                   options={operatorOptions}
@@ -227,6 +230,7 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
                 />
                 <SelectField
                   label="Estado"
+                  tooltip="Filtra por estado de la asignación"
                   value={statusFilter}
                   onChange={setStatusFilter}
                   options={[
