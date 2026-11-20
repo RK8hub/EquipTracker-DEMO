@@ -1,4 +1,4 @@
-import { EllipsisVertical } from "lucide-react";
+import { ChevronRight, Pencil } from "lucide-react";
 import type { HTMLAttributes } from "react";
 import { Checkbox } from "../../ui/Checkbox";
 import { Tag, type TagProps } from "../../ui/Tag";
@@ -13,6 +13,7 @@ export interface CardOperadorProps extends HTMLAttributes<HTMLDivElement> {
   tags?: Array<Pick<TagProps, "label" | "quantity">>;
   selected?: boolean;
   onSelectedChange?: (selected: boolean) => void;
+  onOpen?: () => void;
   onMore?: () => void;
 }
 
@@ -23,6 +24,7 @@ export function CardOperador({
   tags = [],
   selected = false,
   onSelectedChange,
+  onOpen,
   onMore,
   className,
   ...props
@@ -42,20 +44,32 @@ export function CardOperador({
         />
         <button
           type="button"
-          aria-label="Más opciones"
+          aria-label={`Editar ${name}`}
+          title="Editar"
           onClick={onMore}
-          className="eq-card-operador__more"
+          className="eq-card-operador__edit"
         >
-          <EllipsisVertical aria-hidden="true" strokeWidth={1.5} />
+          <Pencil aria-hidden="true" strokeWidth={1.5} />
         </button>
       </div>
 
-      <div className="eq-card-operador__avatar">{initials}</div>
+      <button
+        type="button"
+        className="eq-card-operador__open"
+        aria-label={`Ver equipos de ${name}`}
+        onClick={onOpen}
+      >
+        <div className="eq-card-operador__avatar">{initials}</div>
 
-      <div className="eq-card-operador__info">
-        <span className="eq-card-operador__name" title={name}>{shortName}</span>
-        <span className="eq-card-operador__area">{area}</span>
-      </div>
+        <div className="eq-card-operador__info">
+          <span className="eq-card-operador__name" title={name}>{shortName}</span>
+          <span className="eq-card-operador__area">{area}</span>
+          <span className="eq-card-operador__hint">
+            Ver equipos
+            <ChevronRight aria-hidden="true" />
+          </span>
+        </div>
+      </button>
 
       {visibleTags.map((tag) => (
         <Tag key={tag.label} className="mt-auto" {...tag} />

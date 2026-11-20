@@ -49,24 +49,32 @@
   @apply size-4 shrink-0;
 }
 
+.eq-card-equipment__hint {
+  @apply mt-0.5 flex items-center gap-1 text-xs font-medium text-muted-foreground;
+}
+
+.eq-card-equipment__hint svg {
+  @apply size-3.5 shrink-0;
+}
+
 .eq-card-equipment__footer {
   @apply flex w-full items-center justify-between;
 }
 
-.eq-card-equipment__more {
+.eq-card-equipment__edit {
   @apply flex size-10 cursor-pointer items-center justify-center rounded-[14px] border border-stroke text-primary outline-none transition-colors;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .eq-card-equipment__more:hover {
+  .eq-card-equipment__edit:hover {
     @apply bg-border/60;
   }
 }
 
-.eq-card-equipment__more:focus-visible {
+.eq-card-equipment__edit:focus-visible {
   @apply ring-[3px] ring-zinc-400/50;
 }
 
-.eq-card-equipment__more svg {
+.eq-card-equipment__edit svg {
   @apply size-4;
 }

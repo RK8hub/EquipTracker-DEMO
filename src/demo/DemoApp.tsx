@@ -91,7 +91,8 @@ export function DemoApp() {
     ) : (
       <DashboardScreen canExportCsv={false} />
     );
-  if (detailId === null && page === "operadores") screen = <OperatorsScreen />;
+  if (detailId === null && page === "operadores")
+    screen = <OperatorsScreen onOpenDetail={setDetailId} />;
   else if (detailId === null && page === "equipos")
     screen = <EquipmentScreen onOpenDetail={setDetailId} />;
   else if (detailId === null && page === "asignaciones") screen = <AssignmentsScreen />;

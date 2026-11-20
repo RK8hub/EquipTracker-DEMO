@@ -8,20 +8,28 @@
   @apply flex w-full items-center justify-between;
 }
 
-.eq-card-operador__more {
+.eq-card-operador__edit {
   @apply flex size-10 cursor-pointer items-center justify-center rounded-[14px] border border-stroke text-primary outline-none transition-colors;
 }
 
-.eq-card-operador__more:hover {
+.eq-card-operador__edit:hover {
   @apply bg-border/60;
 }
 
-.eq-card-operador__more:focus-visible {
+.eq-card-operador__edit:focus-visible {
   @apply ring-[3px] ring-zinc-400/50;
 }
 
-.eq-card-operador__more svg {
+.eq-card-operador__edit svg {
   @apply size-4;
+}
+
+.eq-card-operador__open {
+  @apply flex cursor-pointer flex-col items-center gap-[27px] rounded-[8px] outline-none;
+}
+
+.eq-card-operador__open:focus-visible {
+  @apply ring-[3px] ring-zinc-400/50;
 }
 
 .eq-card-operador__avatar {
@@ -38,4 +46,12 @@
 
 .eq-card-operador__area {
   @apply max-w-full truncate text-xs font-normal;
+}
+
+.eq-card-operador__hint {
+  @apply mt-1 flex items-center gap-0.5 text-xs font-medium text-muted-foreground;
+}
+
+.eq-card-operador__hint svg {
+  @apply size-3.5 shrink-0;
 }

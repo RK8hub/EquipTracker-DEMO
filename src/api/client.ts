@@ -209,9 +209,17 @@ export const api = {
     async paged(query: ListQuery = {}): Promise<Paged<Equipment>> {
       await delay();
       const term = searchKey(query.search ?? "");
+      const operatorByEquipment = new Map<number, string>();
+      for (const assignment of db.assignments) {
+        if (assignment.status !== "active") continue;
+        const name = operatorOf(assignment.operator_id)?.name;
+        if (name) operatorByEquipment.set(assignment.equipment_id, name);
+      }
       return page(
         db.equipment.filter((equipment) =>
-          searchKey(`${equipment.serial} ${equipment.brand} ${equipment.model}`).includes(term),
+          searchKey(
+            `${equipment.serial} ${equipment.brand} ${equipment.model} ${operatorByEquipment.get(equipment.id) ?? ""}`,
+          ).includes(term),
         ),
         query,
       );

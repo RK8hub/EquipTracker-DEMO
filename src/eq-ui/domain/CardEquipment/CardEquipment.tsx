@@ -1,4 +1,4 @@
-import { EllipsisVertical, Monitor, User } from "lucide-react";
+import { FileText, Monitor, Pencil, User } from "lucide-react";
 import type { HTMLAttributes } from "react";
 import { Checkbox } from "../../ui/Checkbox";
 import { Tag } from "../../ui/Tag";
@@ -49,6 +49,10 @@ export function CardEquipment({
               <User aria-hidden="true" strokeWidth={1.5} />
               {operator}
             </span>
+            <span className="eq-card-equipment__hint">
+              <FileText aria-hidden="true" />
+              Ver ficha
+            </span>
           </div>
         </button>
         <Checkbox
@@ -61,11 +65,12 @@ export function CardEquipment({
       <div className="eq-card-equipment__footer">
         <button
           type="button"
-          aria-label="Más opciones"
+          aria-label={`Editar ${name}`}
+          title="Editar"
           onClick={onMore}
-          className="eq-card-equipment__more"
+          className="eq-card-equipment__edit"
         >
-          <EllipsisVertical aria-hidden="true" strokeWidth={1.5} />
+          <Pencil aria-hidden="true" strokeWidth={1.5} />
         </button>
         {hasIncidents && <Tag label="Incidencias" quantity={incidents} />}
       </div>
