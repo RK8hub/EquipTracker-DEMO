@@ -176,15 +176,24 @@ export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScre
   async function deleteSelected() {
     if (busy) return;
     setBusy(true);
+    const failed: string[] = [];
+    let deleted = 0;
     try {
       for (const id of selected) {
-        await api.equipment.remove(Number(id));
+        try {
+          await api.equipment.remove(Number(id));
+          deleted += 1;
+        } catch (err) {
+          const serial = data?.items.find((item) => String(item.id) === id)?.serial ?? id;
+          failed.push(`${serial}: ${errorMessage(err)}`);
+        }
       }
-      toast.success("Equipos eliminados");
+      if (deleted > 0) toast.success(`Se eliminaron ${deleted} equipo(s)`);
+      if (failed.length > 0) {
+        toast.error(`No se eliminaron ${failed.length} equipo(s). ${failed.join(" · ")}`);
+      }
       setSelected([]);
       setConfirmDelete(false);
-    } catch (err) {
-      toast.error(errorMessage(err));
     } finally {
       setBusy(false);
       reload();

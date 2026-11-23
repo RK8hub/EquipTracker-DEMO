@@ -112,15 +112,24 @@ export function OperatorsScreen({ onOpenOperator, canWrite = true }: OperatorsSc
   async function deleteSelected() {
     if (busy) return;
     setBusy(true);
+    const failed: string[] = [];
+    let deleted = 0;
     try {
       for (const id of selected) {
-        await api.operators.remove(Number(id));
+        try {
+          await api.operators.remove(Number(id));
+          deleted += 1;
+        } catch (err) {
+          const name = data?.items.find((item) => String(item.id) === id)?.name ?? id;
+          failed.push(`${name}: ${errorMessage(err)}`);
+        }
       }
-      toast.success("Operadores eliminados");
+      if (deleted > 0) toast.success(`Se eliminaron ${deleted} operador(es)`);
+      if (failed.length > 0) {
+        toast.error(`No se eliminaron ${failed.length} operador(es). ${failed.join(" · ")}`);
+      }
       setSelected([]);
       setConfirmDelete(false);
-    } catch (err) {
-      toast.error(errorMessage(err));
     } finally {
       setBusy(false);
       reload();
