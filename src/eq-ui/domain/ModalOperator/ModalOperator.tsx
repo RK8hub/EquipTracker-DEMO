@@ -5,6 +5,8 @@ import { Button } from "../../ui/Button";
 import { Tag, type TagProps } from "../../ui/Tag";
 import { Textfield } from "../../ui/Textfield";
 import { cn } from "../../lib/cn";
+import type { FieldFlash } from "../../../hooks";
+import { FieldError } from "../../../components/FieldError";
 import "./modal-operator.css";
 
 export interface ModalOperatorProps
@@ -22,6 +24,8 @@ export interface ModalOperatorProps
     value: string,
   ) => void;
   busy?: boolean;
+  flash?: FieldFlash;
+  fieldError?: (name: string) => string | undefined;
   onSubmit?: FormHTMLAttributes<HTMLFormElement>["onSubmit"];
   onCancel?: () => void;
 }
@@ -37,6 +41,8 @@ export function ModalOperator({
   values,
   onValueChange,
   busy = false,
+  flash,
+  fieldError,
   onSubmit,
   onCancel,
   className,
@@ -60,6 +66,7 @@ export function ModalOperator({
       <div className="eq-modal-operator__body">
         <div className="eq-modal-operator__fields">
           <Textfield
+            {...flash?.("name")}
             label="Nombre"
             name="name"
             placeholder="Nombre del operador"
@@ -71,7 +78,9 @@ export function ModalOperator({
             disabled={busy}
             required
           />
+          <FieldError message={fieldError?.("name")} />
           <Textfield
+            {...flash?.("department")}
             label="Departamento"
             name="department"
             placeholder="Departamento"
@@ -85,7 +94,9 @@ export function ModalOperator({
             disabled={busy}
             required
           />
+          <FieldError message={fieldError?.("department")} />
           <Textfield
+            {...flash?.("position")}
             label="Puesto"
             name="position"
             placeholder="Puesto"
@@ -97,6 +108,7 @@ export function ModalOperator({
             disabled={busy}
             required
           />
+          <FieldError message={fieldError?.("position")} />
         </div>
         <div className="eq-modal-operator__actions">
           <Button

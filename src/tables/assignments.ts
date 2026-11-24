@@ -7,7 +7,6 @@ export const assignmentColumns: DataTableColumn[] = [
   { key: "serial", header: "Serial" },
   { key: "operador", header: "Operador" },
   { key: "asignador", header: "Asignador" },
-  { key: "estado", header: "Estado" },
   { key: "fecha", header: "Fecha" },
 ];
 
@@ -28,7 +27,6 @@ export function assignmentRow(
     asignador: lookups.userById.get(assignment.assigned_by)?.email
       ? displayName(lookups.userById.get(assignment.assigned_by)!.email)
       : `Usuario #${assignment.assigned_by}`,
-    estado: assignment.status === "active" ? "Activo" : "Devuelto",
     fecha: formatDate(assignment.assigned_at),
   };
 }

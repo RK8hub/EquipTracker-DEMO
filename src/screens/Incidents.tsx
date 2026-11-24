@@ -1,29 +1,39 @@
 import { useEffect, useState } from "react";
+import { Monitor, Users, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { Button, DataTable, Header, SelectField, Textfield, type DataTableColumn, type DataTableRow } from "../eq-ui";
 import { SortDropdown } from "../components/SortDropdown";
 import { incidentColumns, incidentRow } from "../tables/incidents";
 import { api } from "../api/client";
-import { errorMessage, useAsync, useScrollPreserve, useSort } from "../hooks";
+import { errorMessage, useAsync, useDebouncedValue, useScrollPreserve, useSort } from "../hooks";
 import { displayName, equipmentLabel, userLabel } from "../lib/format";
 import { toMap } from "../lib/lookups";
-import { ErrorState, Loading } from "../components/Feedback";
+import { ErrorState, ScreenSkeleton } from "../components/Feedback";
+import { FirstUseGuide, GuideSteps } from "../components/FirstUseGuide";
 import { ModalCard } from "../components/ModalCard";
 import { Page } from "../components/Page";
 import { IncidentFormModal } from "../components/IncidentFormModal";
+import { hasActiveFilters, shouldShowFirstUseGuide } from "../lib/first-use";
 
 const PAGE_SIZE = 5;
+const incidentSteps = [
+  { label: "Quién lo reporta", icon: <Users strokeWidth={1.5} className="size-4" /> },
+  { label: "Qué equipo tiene el problema", icon: <Monitor strokeWidth={1.5} className="size-4" /> },
+  { label: "Qué ocurrió y quién lo revisa", icon: <Wrench strokeWidth={1.5} className="size-4" /> },
+];
 
 export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
   const [operatorFilter, setOperatorFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(0);
   const [formOpen, setFormOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [advanced, setAdvanced] = useState(false);
   const [busy, setBusy] = useState(false);
-  const { sortBy, sortOpen, select: selectSort, toggle: toggleSort } = useSort<"equipo" | "tipo" | "tecnico" | "estado" | "fecha">("fecha");
+  const { sortBy, sortOpen, select: selectSort, toggle: toggleSort } = useSort<"equipo" | "tipo" | "tecnico" | "fecha">("fecha");
   const { capture: captureScroll, restore: restoreScroll } = useScrollPreserve();
 
   const { data, loading, error, reload } = useAsync(async () => {
@@ -31,9 +41,8 @@ export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
       api.incidents.paged({
         skip: page * PAGE_SIZE,
         limit: PAGE_SIZE,
-        search,
+        search: debouncedSearch,
         operatorId: operatorFilter || undefined,
-        status: statusFilter || undefined,
         dateFrom,
         dateTo,
       }),
@@ -43,22 +52,39 @@ export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
     ]);
     const users = await api.users.technicians().catch(() => []);
     return { ...incidents, equipment, operators, assignments, users };
-  }, [page, search, operatorFilter, statusFilter, dateFrom, dateTo]);
+  }, [page, debouncedSearch, operatorFilter, dateFrom, dateTo]);
 
   useEffect(() => {
     setPage(0);
-  }, [search, operatorFilter, statusFilter, dateFrom, dateTo]);
+  }, [debouncedSearch, operatorFilter, dateFrom, dateTo]);
   useEffect(() => {
     restoreScroll();
   }, [page, restoreScroll]);
 
-  if (loading && !data) return <Loading />;
+  if (loading && !data)
+    return (
+      <ScreenSkeleton
+        title="Incidencias"
+        subtitle="Reportes de fallas y su seguimiento hasta el cierre."
+        columns={7}
+      />
+    );
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (!data) return null;
 
   const equipmentById = toMap(data.equipment);
   const operatorById = toMap(data.operators);
   const userById = toMap(data.users);
+
+  const filters = { search, operatorFilter, dateFrom, dateTo };
+  const filtersActive = hasActiveFilters(filters);
+  const firstUse = shouldShowFirstUseGuide(data.total, filters);
+  const clearFilters = () => {
+    setSearch("");
+    setOperatorFilter("");
+    setDateFrom("");
+    setDateTo("");
+  };
 
   const visible = [...data.items].sort((a, b) => {
     const av =
@@ -68,9 +94,7 @@ export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
           ? a.type
           : sortBy === "tecnico"
             ? userLabel(userById.get(a.technician_id), a.technician_id)
-            : sortBy === "estado"
-              ? a.status
-              : a.created_at;
+            : a.created_at;
     const bv =
       sortBy === "equipo"
         ? equipmentLabel(equipmentById.get(b.equipment_id), b.equipment_id)
@@ -78,9 +102,7 @@ export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
           ? b.type
           : sortBy === "tecnico"
             ? userLabel(userById.get(b.technician_id), b.technician_id)
-            : sortBy === "estado"
-              ? b.status
-              : b.created_at;
+            : b.created_at;
     return String(av).localeCompare(String(bv), "es", { sensitivity: "base" });
   });
 
@@ -134,7 +156,30 @@ export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
 
   return (
     <div className="flex min-h-full flex-col">
-      <Page title="Incidencias" subtitle="Reportes de fallas y su seguimiento hasta el cierre.">
+      <Page
+        title="Incidencias"
+        subtitle="Reportes de fallas y su seguimiento hasta el cierre."
+        actions={
+          firstUse ? undefined : (
+            <Button
+              text="? Cómo funciona"
+              variant="ghost"
+              onClick={() => setHelpOpen(true)}
+            />
+          )
+        }
+      >
+        {firstUse && !advanced ? (
+          <FirstUseGuide
+            icon={<Wrench aria-hidden="true" strokeWidth={1.5} className="size-8" />}
+            title="Todavía no hay incidencias"
+            description="Una incidencia deja constancia de un problema con un equipo y lo seguimos hasta cerrarlo."
+            steps={incidentSteps}
+            action="incidencia"
+            onCreate={canWrite ? () => setFormOpen(true) : undefined}
+            onAdvanced={() => setAdvanced(true)}
+          />
+        ) : (
         <DataTable
           columns={columns}
           rows={rows}
@@ -160,24 +205,32 @@ export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
                     : undefined
                 }
                 right={
-                  <div className="relative">
-                    <SortDropdown
-                      options={[
-                        { value: "equipo", label: "Equipo" },
-                        { value: "tipo", label: "Tipo" },
-                        { value: "tecnico", label: "Técnico" },
-                        { value: "estado", label: "Estado" },
-                        { value: "fecha", label: "Fecha" },
-                      ]}
-                      value={sortBy}
-                      open={sortOpen}
-                      onToggle={toggleSort}
-                      onSelect={selectSort}
-                    />
+                  <div className="flex items-center gap-2">
+                    {filtersActive && (
+                      <Button
+                        text="Quitar filtros"
+                        variant="ghost"
+                        onClick={clearFilters}
+                      />
+                    )}
+                    <div className="relative">
+                      <SortDropdown
+                        options={[
+                          { value: "equipo", label: "Equipo" },
+                          { value: "tipo", label: "Tipo" },
+                          { value: "tecnico", label: "Técnico" },
+                          { value: "fecha", label: "Fecha" },
+                        ]}
+                        value={sortBy}
+                        open={sortOpen}
+                        onToggle={toggleSort}
+                        onSelect={selectSort}
+                      />
+                    </div>
                   </div>
                 }
               />
-              <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
                 <SelectField
                   label="Reportado por"
                   searchable
@@ -190,17 +243,6 @@ export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
                     label: operator.name,
                   }))}
                   placeholder="Todos los operadores"
-                />
-                <SelectField
-                  label="Estado"
-                  tooltip="Filtra por el estado de la incidencia"
-                  value={statusFilter}
-                  onChange={setStatusFilter}
-                  options={[
-                    { value: "open", label: "Abierta" },
-                    { value: "closed", label: "Cerrada" },
-                  ]}
-                  placeholder="Todos los estados"
                 />
                 <Textfield
                   label="Desde"
@@ -221,6 +263,32 @@ export function IncidentsScreen({ canWrite = true }: { canWrite?: boolean }) {
           }
           summary={`${data.total} incidencias · pág. ${safePage + 1}/${totalPages}`}
         />
+        )}
+
+        {helpOpen && (
+          <ModalCard
+            title="Cómo funcionan las incidencias"
+            description="Una incidencia se cierra cuando se resuelve; no se elimina."
+            onClose={() => setHelpOpen(false)}
+            footer={
+              <>
+                <Button text="Cerrar" onClick={() => setHelpOpen(false)} />
+                {canWrite && (
+                  <Button
+                    text="Registrar incidencia"
+                    variant="primary"
+                    onClick={() => {
+                      setHelpOpen(false);
+                      setFormOpen(true);
+                    }}
+                  />
+                )}
+              </>
+            }
+          >
+            <GuideSteps steps={incidentSteps} />
+          </ModalCard>
+        )}
 
         {canWrite && formOpen && (
           <IncidentFormModal

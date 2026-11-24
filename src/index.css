@@ -20,3 +20,55 @@ body {
   overscroll-behavior: none;
   @apply bg-background font-sans text-foreground antialiased;
 }
+
+/* Validación: un pulso breve en el borde del campo que impide guardar. */
+@keyframes eq-field-flash {
+  0%, 100% { border-color: var(--eq-stroke); }
+  25%, 75% { border-color: var(--eq-destructive); }
+}
+
+@keyframes eq-field-flash-b {
+  0%, 100% { border-color: var(--eq-stroke); }
+  25%, 75% { border-color: var(--eq-destructive); }
+}
+
+@keyframes eq-field-flash-reduced {
+  0%, 70% { border-color: var(--eq-destructive); }
+  100% { border-color: var(--eq-stroke); }
+}
+
+@keyframes eq-field-flash-b-reduced {
+  0%, 70% { border-color: var(--eq-destructive); }
+  100% { border-color: var(--eq-stroke); }
+}
+
+.eq-field-flash-a .eq-dropdown-button,
+.eq-field-flash-b .eq-dropdown-button,
+.eq-field-flash-a .eq-textfield__input,
+.eq-field-flash-b .eq-textfield__input,
+.eq-field-flash-a textarea,
+.eq-field-flash-b textarea {
+  animation: eq-field-flash 600ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.eq-field-flash-b .eq-dropdown-button,
+.eq-field-flash-b .eq-textfield__input,
+.eq-field-flash-b textarea {
+  animation-name: eq-field-flash-b;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-skeleton { animation: none; }
+  .eq-field-flash-a .eq-dropdown-button,
+  .eq-field-flash-a .eq-textfield__input,
+  .eq-field-flash-a textarea {
+    animation-name: eq-field-flash-reduced;
+    animation-timing-function: linear;
+  }
+  .eq-field-flash-b .eq-dropdown-button,
+  .eq-field-flash-b .eq-textfield__input,
+  .eq-field-flash-b textarea {
+    animation-name: eq-field-flash-b-reduced;
+    animation-timing-function: linear;
+  }
+}

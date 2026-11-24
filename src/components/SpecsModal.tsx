@@ -2,8 +2,9 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button, Textfield } from "../eq-ui";
 import { api } from "../api/client";
-import { errorMessage } from "../hooks";
+import { errorMessage, useFieldFlash } from "../hooks";
 import type { CapacityUnit, Specs } from "../types";
+import { FieldError } from "./FieldError";
 import { ModalCard } from "./ModalCard";
 import { SelectField } from "./SelectField";
 
@@ -107,15 +108,6 @@ function SectionHeader({
   );
 }
 
-function FieldError({ message }: { message?: string }) {
-  if (!message) return null;
-  return (
-    <p data-field-error className="mt-1 text-xs text-destructive">
-      {message}
-    </p>
-  );
-}
-
 /* ---------- Modal ---------- */
 
 export interface SpecsModalProps {
@@ -140,6 +132,7 @@ export function SpecsModal({ onClose, onCreated }: SpecsModalProps) {
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [error, setError] = useState<string | null>(null);
+  const { flash, textField } = useFieldFlash();
   const bodyRef = useRef<HTMLDivElement>(null);
 
   const isDedicated = gpuType === "dedicated";
@@ -182,6 +175,7 @@ export function SpecsModal({ onClose, onCreated }: SpecsModalProps) {
     const found = validate();
     setErrors(found);
     if (Object.keys(found).length > 0) {
+      flash(Object.keys(found));
       scrollToFirstError();
       return;
     }
@@ -260,6 +254,7 @@ export function SpecsModal({ onClose, onCreated }: SpecsModalProps) {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
               <Textfield
+                {...textField("cpuBrand")}
                 label="Marca"
                 placeholder="Intel"
                 value={cpuBrand}
@@ -273,6 +268,7 @@ export function SpecsModal({ onClose, onCreated }: SpecsModalProps) {
             </div>
             <div>
               <Textfield
+                {...textField("cpuModel")}
                 label="Modelo"
                 placeholder="Core i7-1265U"
                 value={cpuModel}
@@ -305,6 +301,7 @@ export function SpecsModal({ onClose, onCreated }: SpecsModalProps) {
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <div>
               <Textfield
+                {...textField("ram")}
                 label="Capacidad"
                 type="number"
                 min={1}
@@ -352,6 +349,7 @@ export function SpecsModal({ onClose, onCreated }: SpecsModalProps) {
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <div>
               <Textfield
+                {...textField("storage")}
                 label="Capacidad"
                 type="number"
                 min={1}
@@ -393,6 +391,7 @@ export function SpecsModal({ onClose, onCreated }: SpecsModalProps) {
             />
             <div>
               <Textfield
+                {...textField("gpuBrand")}
                 label="Marca"
                 placeholder={isDedicated ? "NVIDIA" : "Intel"}
                 value={gpuBrand}
@@ -406,6 +405,7 @@ export function SpecsModal({ onClose, onCreated }: SpecsModalProps) {
             </div>
             <div>
               <Textfield
+                {...textField("gpuModel")}
                 label="Modelo"
                 placeholder={isDedicated ? "RTX 3050" : "Iris Xe"}
                 value={gpuModel}
@@ -422,6 +422,7 @@ export function SpecsModal({ onClose, onCreated }: SpecsModalProps) {
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               <div>
                 <Textfield
+                  {...textField("gpuMemory")}
                   label="Memoria"
                   type="number"
                   min={1}

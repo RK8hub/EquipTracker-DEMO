@@ -2,8 +2,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button, SelectField, Textfield } from "../eq-ui";
 import { api } from "../api/client";
-import { errorMessage } from "../hooks";
+import { errorMessage, useFieldFlash } from "../hooks";
 import { displayName } from "../lib/format";
+import { equipmentForReporter } from "../lib/incident-form";
+import { FieldError } from "./FieldError";
 import { ModalCard } from "./ModalCard";
 import type { Assignment, Equipment, Operator, User } from "../types";
 
@@ -50,6 +52,7 @@ export function IncidentFormModal({
     original_reported_by: initialAssignment ? String(initialAssignment.operator_id) : "",
   });
   const [busy, setBusy] = useState(false);
+  const { flash, clear, error, field, textField } = useFieldFlash();
 
   const operatorOptions = operators
     .slice()
@@ -79,6 +82,7 @@ export function IncidentFormModal({
   }));
 
   function chooseEquipment(value: string) {
+    clear();
     const assignment = assignments.find(
       (item) => item.status === "active" && item.equipment_id === Number(value),
     );
@@ -97,22 +101,18 @@ export function IncidentFormModal({
   }
 
   function chooseReporter(value: string) {
-    const ids = assignments
-      .filter(
-        (item) => item.status === "active" && item.operator_id === Number(value),
-      )
-      .map((item) => item.equipment_id);
+    clear();
     setForm((current) =>
       current
         ? {
             ...current,
             reported_by: value,
-            equipment_id:
-              current.equipment_id && ids.includes(Number(current.equipment_id))
-                ? current.equipment_id
-                : ids.length === 1
-                  ? String(ids[0])
-                  : "",
+            equipment_id: equipmentForReporter(
+              assignments,
+              value,
+              current.equipment_id,
+              equipmentId,
+            ),
           }
         : current,
     );
@@ -123,13 +123,14 @@ export function IncidentFormModal({
     const equipmentIdValue = Number(form.equipment_id);
     const reporterId = Number(form.reported_by);
     const technicianId = Number(form.technician_id);
-    if (
-      !equipmentIdValue ||
-      !form.type.trim() ||
-      !form.reason.trim() ||
-      !reporterId ||
-      !technicianId
-    ) {
+    const missing: string[] = [];
+    if (!equipmentIdValue) missing.push("equipment_id");
+    if (!form.type.trim()) missing.push("type");
+    if (!form.reason.trim()) missing.push("reason");
+    if (!reporterId) missing.push("reported_by");
+    if (!technicianId) missing.push("technician_id");
+    if (missing.length > 0) {
+      flash(missing);
       toast.error("Completa todos los campos.");
       return;
     }
@@ -172,65 +173,84 @@ export function IncidentFormModal({
       }
     >
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <SelectField
-          label="Reportado por"
-          searchable
-          value={form.reported_by}
-          onChange={chooseReporter}
-          options={operatorOptions}
-          placeholder="Selecciona el operador"
-        />
-        <SelectField
-          label="Equipo"
-          searchable
-          searchPlaceholder="Buscar por serial..."
-          value={form.equipment_id}
-          onChange={chooseEquipment}
-          options={equipmentOptions}
-          placeholder="Buscar por serial..."
-          disabled={equipmentId !== undefined}
-        />
-        <Textfield
-          label="Tipo"
-          placeholder="Falla de hardware"
-          value={form.type}
-          onChange={(event) =>
-            setForm((current) =>
-              current ? { ...current, type: event.target.value } : current,
-            )
-          }
-          showIcon={false}
-        />
-        <SelectField
-          label="Técnico asignado"
-          searchable
-          value={form.technician_id}
-          onChange={(value) =>
-            setForm((current) =>
-              current ? { ...current, technician_id: value } : current,
-            )
-          }
-          options={technicianOptions}
-          placeholder={
-            users.length === 0
-              ? "No se pudieron cargar los usuarios"
-              : "Selecciona el técnico"
-          }
-        />
+        <div {...field("reported_by")}>
+          <SelectField
+            label="Reportado por"
+            searchable
+            value={form.reported_by}
+            onChange={chooseReporter}
+            options={operatorOptions}
+            placeholder="Selecciona el operador"
+          />
+          <FieldError message={error("reported_by")} />
+        </div>
+        <div {...field("equipment_id")}>
+          <SelectField
+            label="Equipo"
+            searchable
+            searchPlaceholder="Buscar por serial..."
+            value={form.equipment_id}
+            onChange={chooseEquipment}
+            options={equipmentOptions}
+            placeholder="Buscar por serial..."
+            disabled={equipmentId !== undefined}
+          />
+          <FieldError message={error("equipment_id")} />
+        </div>
+        <div>
+          <Textfield
+            {...textField("type")}
+            label="Tipo"
+            placeholder="Falla de hardware"
+            value={form.type}
+            onChange={(event) => {
+              clear();
+              setForm((current) =>
+                current ? { ...current, type: event.target.value } : current,
+              );
+            }}
+            showIcon={false}
+          />
+          <FieldError message={error("type")} />
+        </div>
+        <div {...field("technician_id")}>
+          <SelectField
+            label="Técnico asignado"
+            searchable
+            value={form.technician_id}
+            onChange={(value) => {
+              clear();
+              setForm((current) =>
+                current ? { ...current, technician_id: value } : current,
+              );
+            }}
+            options={technicianOptions}
+            placeholder={
+              users.length === 0
+                ? "No se pudieron cargar los usuarios"
+                : "Selecciona el técnico"
+            }
+          />
+          <FieldError message={error("technician_id")} />
+        </div>
       </div>
-      <label className="flex flex-col gap-1">
-        <span className="text-base font-normal text-primary">Motivo</span>
-        <textarea
-          placeholder="Describe el problema"
-          value={form.reason}
-          onChange={(event) =>
-            setForm((current) =>
-              current ? { ...current, reason: event.target.value } : current,
-            )
-          }
-          className="min-h-24 w-full resize-y rounded-[8px] border border-stroke bg-transparent p-2 text-base font-normal text-primary outline-none placeholder:text-primary/45 focus:ring-[1px] focus:ring-zinc-400/40"
-        />
-      </label>
+      <div {...field("reason")}>
+        <label className="flex flex-col gap-1">
+          <span className="text-base font-normal text-primary">Motivo</span>
+          <textarea
+            placeholder="Describe el problema"
+            value={form.reason}
+            onChange={(event) => {
+              clear();
+              setForm((current) =>
+                current ? { ...current, reason: event.target.value } : current,
+              );
+            }}
+            className="min-h-24 w-full resize-y rounded-[8px] border border-stroke bg-transparent p-2 text-base font-normal text-primary outline-none placeholder:text-primary/45 focus:ring-[1px] focus:ring-zinc-400/40"
+          />
+        </label>
+        <FieldError message={error("reason")} />
+      </div>
     </ModalCard>
   );
 }

@@ -428,10 +428,13 @@ export const api = {
     async paged(query: ListQuery = {}): Promise<Paged<HistoryEntry>> {
       await delay();
       const origin = String(query.origin ?? "").toLowerCase();
-      const term = searchKey(query.serial ?? "");
+      const serial = searchKey(String(query.serial ?? ""));
+      const operador = searchKey(String(query.operador ?? ""));
       const rows = db.history.filter((entry) => {
         if (origin && !String(entry.origen).includes(origin)) return false;
-        return searchKey(`${entry.serial ?? ""} ${entry.equipo ?? ""} ${entry.operador ?? ""}`).includes(term);
+        if (serial && searchKey(entry.serial ?? "") !== serial) return false;
+        if (operador && searchKey(entry.operador ?? "") !== operador) return false;
+        return true;
       });
       return page(rows, query);
     },

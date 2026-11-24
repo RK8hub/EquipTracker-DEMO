@@ -2,12 +2,15 @@ import { ChevronRight, Pencil } from "lucide-react";
 import type { HTMLAttributes } from "react";
 import { Checkbox } from "../../ui/Checkbox";
 import { Tag, type TagProps } from "../../ui/Tag";
+import { Tooltip } from "../../ui/Tooltip";
 import { cn } from "../../lib/cn";
 import "./card-operador.css";
 
 export interface CardOperadorProps extends HTMLAttributes<HTMLDivElement> {
   name: string;
   area: string;
+  /** Solo los perfiles con escritura ven selección y edición. */
+  canWrite?: boolean;
   /** Iniciales del avatar. */
   initials: string;
   tags?: Array<Pick<TagProps, "label" | "quantity">>;
@@ -20,6 +23,7 @@ export interface CardOperadorProps extends HTMLAttributes<HTMLDivElement> {
 export function CardOperador({
   name,
   area,
+  canWrite = true,
   initials,
   tags = [],
   selected = false,
@@ -36,22 +40,25 @@ export function CardOperador({
 
   return (
     <div className={cn("eq-card-operador", className)} {...props}>
-      <div className="eq-card-operador__actions">
-        <Checkbox
-          label="Seleccionar operador"
-          checked={selected}
-          onCheckedChange={onSelectedChange}
-        />
-        <button
-          type="button"
-          aria-label={`Editar ${name}`}
-          title="Editar"
-          onClick={onMore}
-          className="eq-card-operador__edit"
-        >
-          <Pencil aria-hidden="true" strokeWidth={1.5} />
-        </button>
-      </div>
+      {canWrite && (
+        <div className="eq-card-operador__actions">
+          <Checkbox
+            label="Seleccionar operador"
+            checked={selected}
+            onCheckedChange={onSelectedChange}
+          />
+          <Tooltip label="Editar">
+            <button
+              type="button"
+              aria-label={`Editar ${name}`}
+              onClick={onMore}
+              className="eq-card-operador__edit"
+            >
+              <Pencil aria-hidden="true" strokeWidth={1.5} />
+            </button>
+          </Tooltip>
+        </div>
+      )}
 
       <button
         type="button"

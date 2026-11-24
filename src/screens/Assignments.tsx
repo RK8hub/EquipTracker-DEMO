@@ -1,28 +1,40 @@
 import { useEffect, useState } from "react";
+import { Handshake, Monitor, Users } from "lucide-react";
 import { toast } from "sonner";
 import { Button, DataTable, Header, SelectField, Textfield, type DataTableColumn, type DataTableRow } from "../eq-ui";
 import { SortDropdown } from "../components/SortDropdown";
 import { assignmentColumns, assignmentRow } from "../tables/assignments";
 import { api } from "../api/client";
-import { errorMessage, useAsync, useScrollPreserve, useSort } from "../hooks";
+import { errorMessage, useAsync, useDebouncedValue, useFieldFlash, useScrollPreserve, useSort } from "../hooks";
 import { displayName, equipmentLabel, operatorLabel } from "../lib/format";
 import { toMap } from "../lib/lookups";
-import { ErrorState, Loading } from "../components/Feedback";
+import { ErrorState, ScreenSkeleton } from "../components/Feedback";
+import { FieldError } from "../components/FieldError";
+import { FirstUseGuide, GuideSteps } from "../components/FirstUseGuide";
 import { ModalCard } from "../components/ModalCard";
 import { Page } from "../components/Page";
+import { hasActiveFilters, shouldShowFirstUseGuide } from "../lib/first-use";
 
 const PAGE_SIZE = 5;
+const assignmentSteps = [
+  { label: "Elige un equipo disponible", icon: <Monitor strokeWidth={1.5} className="size-4" /> },
+  { label: "Elige quién lo recibe", icon: <Users strokeWidth={1.5} className="size-4" /> },
+  { label: "Guarda; después podrás devolverlo", icon: <Handshake strokeWidth={1.5} className="size-4" /> },
+];
 
 export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
   const [operatorFilter, setOperatorFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(0);
   const [form, setForm] = useState<{ equipment_id: string; operator_id: string } | null>(null);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [advanced, setAdvanced] = useState(false);
   const [busy, setBusy] = useState(false);
-  const { sortBy, sortOpen, select: selectSort, toggle: toggleSort } = useSort<"equipo" | "operador" | "estado" | "fecha" | "asignador">("fecha");
+  const { flash, clear, error: fieldError, field } = useFieldFlash();
+  const { sortBy, sortOpen, select: selectSort, toggle: toggleSort } = useSort<"equipo" | "operador" | "fecha" | "asignador">("fecha");
   const { capture: captureScroll, restore: restoreScroll } = useScrollPreserve();
 
   const { data, loading, error, reload } = useAsync(async () => {
@@ -30,9 +42,8 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
       api.assignments.paged({
         skip: page * PAGE_SIZE,
         limit: PAGE_SIZE,
-        search,
+        search: debouncedSearch,
         operatorId: operatorFilter || undefined,
-        status: statusFilter || undefined,
         dateFrom,
         dateTo,
       }),
@@ -46,22 +57,39 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
       users = [];
     }
     return { ...assignments, equipment, operators, users };
-  }, [page, search, operatorFilter, statusFilter, dateFrom, dateTo]);
+  }, [page, debouncedSearch, operatorFilter, dateFrom, dateTo]);
 
   useEffect(() => {
     setPage(0);
-  }, [search, operatorFilter, statusFilter, dateFrom, dateTo]);
+  }, [debouncedSearch, operatorFilter, dateFrom, dateTo]);
   useEffect(() => {
     restoreScroll();
   }, [page, restoreScroll]);
 
-  if (loading && !data) return <Loading />;
+  if (loading && !data)
+    return (
+      <ScreenSkeleton
+        title="Asignaciones"
+        subtitle="Equipos entregados y su historial de devolución."
+        columns={5}
+      />
+    );
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (!data) return null;
 
   const equipmentById = toMap(data.equipment);
   const operatorById = toMap(data.operators);
   const userById = toMap(data.users);
+
+  const filters = { search, operatorFilter, dateFrom, dateTo };
+  const filtersActive = hasActiveFilters(filters);
+  const firstUse = shouldShowFirstUseGuide(data.total, filters);
+  const clearFilters = () => {
+    setSearch("");
+    setOperatorFilter("");
+    setDateFrom("");
+    setDateTo("");
+  };
 
   const visible = [...data.items].sort((a, b) => {
     const av =
@@ -71,9 +99,7 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
           ? operatorLabel(operatorById.get(a.operator_id), a.operator_id)
           : sortBy === "asignador"
             ? userById.get(a.assigned_by)?.email ?? `Usuario #${a.assigned_by}`
-            : sortBy === "estado"
-              ? a.status
-              : a.assigned_at;
+            : a.assigned_at;
     const bv =
       sortBy === "equipo"
         ? equipmentLabel(equipmentById.get(b.equipment_id), b.equipment_id)
@@ -81,9 +107,7 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
           ? operatorLabel(operatorById.get(b.operator_id), b.operator_id)
           : sortBy === "asignador"
             ? userById.get(b.assigned_by)?.email ?? `Usuario #${b.assigned_by}`
-            : sortBy === "estado"
-              ? b.status
-              : b.assigned_at;
+            : b.assigned_at;
     return String(av).localeCompare(String(bv), "es", { sensitivity: "base" });
   });
 
@@ -122,7 +146,11 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
     if (!form || busy) return;
     const equipmentId = Number(form.equipment_id);
     const operatorId = Number(form.operator_id);
-    if (!equipmentId || !operatorId) {
+    const missing: string[] = [];
+    if (!equipmentId) missing.push("equipment_id");
+    if (!operatorId) missing.push("operator_id");
+    if (missing.length > 0) {
+      flash(missing);
       toast.error("Selecciona equipo y operador.");
       return;
     }
@@ -174,7 +202,30 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
 
   return (
     <div className="flex min-h-full flex-col">
-      <Page title="Asignaciones" subtitle="Equipos entregados y su historial de devolución.">
+      <Page
+        title="Asignaciones"
+        subtitle="Equipos entregados y su historial de devolución."
+        actions={
+          firstUse ? undefined : (
+            <Button
+              text="? Cómo funciona"
+              variant="ghost"
+              onClick={() => setHelpOpen(true)}
+            />
+          )
+        }
+      >
+        {firstUse && !advanced ? (
+          <FirstUseGuide
+            icon={<Handshake aria-hidden="true" strokeWidth={1.5} className="size-8" />}
+            title="Todavía no hay asignaciones"
+            description="Una asignación dice qué equipo tiene cada operador y desde cuándo."
+            steps={assignmentSteps}
+            action="asignación"
+            onCreate={canWrite ? () => setForm({ equipment_id: "", operator_id: "" }) : undefined}
+            onAdvanced={() => setAdvanced(true)}
+          />
+        ) : (
         <DataTable
           columns={columns}
           rows={rows}
@@ -200,24 +251,32 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
                     : undefined
                 }
                 right={
-                  <div className="relative">
-                    <SortDropdown
-                      options={[
-                        { value: "equipo", label: "Equipo" },
-                        { value: "operador", label: "Operador" },
-                        { value: "asignador", label: "Asignador" },
-                        { value: "estado", label: "Estado" },
-                        { value: "fecha", label: "Fecha" },
-                      ]}
-                      value={sortBy}
-                      open={sortOpen}
-                      onToggle={toggleSort}
-                      onSelect={selectSort}
-                    />
+                  <div className="flex items-center gap-2">
+                    {filtersActive && (
+                      <Button
+                        text="Quitar filtros"
+                        variant="ghost"
+                        onClick={clearFilters}
+                      />
+                    )}
+                    <div className="relative">
+                      <SortDropdown
+                        options={[
+                          { value: "equipo", label: "Equipo" },
+                          { value: "operador", label: "Operador" },
+                          { value: "asignador", label: "Asignador" },
+                          { value: "fecha", label: "Fecha" },
+                        ]}
+                        value={sortBy}
+                        open={sortOpen}
+                        onToggle={toggleSort}
+                        onSelect={selectSort}
+                      />
+                    </div>
                   </div>
                 }
               />
-              <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
                 <SelectField
                   label="Operador"
                   searchable
@@ -227,17 +286,6 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
                   onChange={setOperatorFilter}
                   options={operatorOptions}
                   placeholder="Todos los operadores"
-                />
-                <SelectField
-                  label="Estado"
-                  tooltip="Filtra por estado de la asignación"
-                  value={statusFilter}
-                  onChange={setStatusFilter}
-                  options={[
-                    { value: "active", label: "Activo" },
-                    { value: "inactive", label: "Devuelto" },
-                  ]}
-                  placeholder="Todos los estados"
                 />
                 <Textfield
                   label="Desde"
@@ -258,6 +306,32 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
           }
           summary={`${data.total} asignaciones · pág. ${safePage + 1}/${totalPages}`}
         />
+        )}
+
+        {helpOpen && (
+          <ModalCard
+            title="Cómo funcionan las asignaciones"
+            description="El responsable de cada equipo queda registrado; al devolverlo se guarda el historial."
+            onClose={() => setHelpOpen(false)}
+            footer={
+              <>
+                <Button text="Cerrar" onClick={() => setHelpOpen(false)} />
+                {canWrite && (
+                  <Button
+                    text="Asignar equipo"
+                    variant="primary"
+                    onClick={() => {
+                      setHelpOpen(false);
+                      setForm({ equipment_id: "", operator_id: "" });
+                    }}
+                  />
+                )}
+              </>
+            }
+          >
+            <GuideSteps steps={assignmentSteps} />
+          </ModalCard>
+        )}
 
         {canWrite && form && (
           <ModalCard
@@ -277,12 +351,14 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
             }
           >
             <SelectField
+              {...field("equipment_id")}
               label="Equipo"
               searchable
               value={form.equipment_id}
-              onChange={(value) =>
-                setForm((current) => (current ? { ...current, equipment_id: value } : current))
-              }
+              onChange={(value) => {
+                clear();
+                setForm((current) => (current ? { ...current, equipment_id: value } : current));
+              }}
               options={data.equipment
                 .filter((item) => !assignedEquipmentIds.has(item.id))
                 .map((item) => ({
@@ -291,16 +367,20 @@ export function AssignmentsScreen({ canWrite = true }: { canWrite?: boolean }) {
                 }))}
               placeholder="Selecciona un equipo"
             />
+            <FieldError message={fieldError("equipment_id")} />
             <SelectField
+              {...field("operator_id")}
               label="Operador"
               searchable
               value={form.operator_id}
-              onChange={(value) =>
-                setForm((current) => (current ? { ...current, operator_id: value } : current))
-              }
+              onChange={(value) => {
+                clear();
+                setForm((current) => (current ? { ...current, operator_id: value } : current));
+              }}
               options={operatorOptions}
               placeholder="Selecciona un operador"
             />
+            <FieldError message={fieldError("operator_id")} />
           </ModalCard>
         )}
       </Page>

@@ -10,6 +10,7 @@ export interface ListQuery {
   dateTo?: string | null;
   equipmentId?: number | string | null;
   origin?: string | null;
+  operador?: string | null;
 }
 
 export interface Paged<T> {
@@ -57,6 +58,7 @@ export function listParams(query: ListQuery = {}): string {
     put("reported_by", query.operatorId);
   }
   put("serial", query.serial);
+  put("operador", query.operador);
   put("status", query.status);
   if (query.dateFrom) {
     put("date_from", query.dateFrom);

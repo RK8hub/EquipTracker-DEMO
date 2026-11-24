@@ -1,36 +1,39 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import {
-  ArrowLeft,
   Cpu,
-  FileSpreadsheet,
   HardDrive,
   MemoryStick,
   MonitorCog,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import {
   Button,
   cn,
   DataTable,
+  NavigationButton,
+  Tooltip,
   type DataTableColumn,
   type DataTableRow,
 } from "../eq-ui";
 import { api } from "../api/client";
 import { errorMessage, useAsync } from "../hooks";
 import { toMap } from "../lib/lookups";
-import { ErrorState, Loading } from "../components/Feedback";
+import { ErrorState, ScreenSkeleton } from "../components/Feedback";
 import { Page } from "../components/Page";
 import { IncidentFormModal } from "../components/IncidentFormModal";
-import { assignmentColumns, assignmentRow } from "../tables/assignments";
-import { incidentColumns, incidentRow } from "../tables/incidents";
+import {
+  detailActivityColumns,
+  detailAssignmentRow,
+  detailIncidentRow,
+} from "../tables/detail-activity";
 import type { Specs } from "../types";
 
 export interface EquipmentDetailProps {
   equipmentId: number;
   onBack: () => void;
   canWrite?: boolean;
-  historyNotice?: string;
 }
 
 function specLines(spec: Specs | null): { label: string; value: string; Icon: LucideIcon }[] {
@@ -59,7 +62,6 @@ export function EquipmentDetailScreen({
   equipmentId,
   onBack,
   canWrite = true,
-  historyNotice,
 }: EquipmentDetailProps) {
   const [formOpen, setFormOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -76,7 +78,8 @@ export function EquipmentDetailScreen({
     return { equipment, spec, operators, users, assignments, incidents };
   }, [equipmentId]);
 
-  if (loading && !data) return <Loading />;
+  if (loading && !data)
+    return <ScreenSkeleton title="Equipo" subtitle="Detalle del equipo." variant="detail" />;
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (!data) return null;
 
@@ -92,31 +95,34 @@ export function EquipmentDetailScreen({
   const incidentsForEquipment = data.incidents.items.filter(
     (incident) => incident.equipment_id === equipmentId,
   );
-  const assignmentRows: DataTableRow[] = assignmentsForEquipment.map((assignment) =>
-    assignmentRow(assignment, { equipmentById, operatorById, userById }),
-  );
-  const incidentColumnsWithAction: DataTableColumn[] = canWrite
-    ? [...incidentColumns, { key: "accion", header: "Acción", className: "justify-center" }]
-    : incidentColumns;
-  const incidentRows: DataTableRow[] = incidentsForEquipment.map((incident) => ({
-    ...incidentRow(incident, { equipmentById, operatorById, userById }),
-    ...(canWrite
-      ? {
-          accion:
-            incident.status === "open" ? (
-              <Button
-                text="Cerrar"
-                variant="ghost"
-                className="h-8 px-3"
-                disabled={busy}
-                onClick={() => closeIncident(incident.id)}
-              />
-            ) : (
-              "—"
-            ),
-        }
-      : {}),
-  }));
+  const activityColumns: DataTableColumn[] = canWrite
+    ? [...detailActivityColumns, { key: "accion", header: "Acción", className: "justify-center" }]
+    : detailActivityColumns;
+  const activityRows: DataTableRow[] = [
+    ...assignmentsForEquipment.map((assignment) =>
+      detailAssignmentRow(assignment, { equipmentById, operatorById, userById }),
+    ),
+    ...incidentsForEquipment.map((incident) => {
+      const row = detailIncidentRow(incident, { equipmentById, operatorById, userById });
+      return canWrite
+        ? {
+            ...row,
+            accion:
+              incident.status === "open" ? (
+                <Button
+                  text="Cerrar"
+                  variant="ghost"
+                  className="h-8 px-3"
+                  disabled={busy}
+                  onClick={() => closeIncident(incident.id)}
+                />
+              ) : (
+                "—"
+              ),
+          }
+        : row;
+    }),
+  ];
 
   async function closeIncident(id: number) {
     if (busy) return;
@@ -143,19 +149,16 @@ export function EquipmentDetailScreen({
         fluid
       >
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <Button
-            text="Volver a equipos"
-            variant="ghost"
-            leftIcon={<ArrowLeft aria-hidden="true" className="size-4" />}
-            showLeftIcon
+          <NavigationButton
+            direction="previous"
+            label="Volver a equipos"
             onClick={onBack}
           />
           {canWrite && (
             <Button
-              text="Reportar incidencia"
-              variant="primary"
-              leftIcon={<FileSpreadsheet aria-hidden="true" className="size-4" />}
+              leftIcon={<Wrench aria-hidden="true" strokeWidth={1.5} className="size-4" />}
               showLeftIcon
+              text="Reportar incidencia"
               onClick={() => setFormOpen(true)}
             />
           )}
@@ -187,8 +190,10 @@ export function EquipmentDetailScreen({
                   </div>
                   <div className="min-w-0">
                     <dt className="text-xs text-muted-foreground">{label}</dt>
-                    <dd className="truncate text-sm text-primary" title={value || undefined}>
-                      {value || "—"}
+                    <dd className="text-sm text-primary">
+                      <Tooltip label={value || "—"} className="block w-full">
+                        <span className="block w-full truncate">{value || "—"}</span>
+                      </Tooltip>
                     </dd>
                   </div>
                 </div>
@@ -199,27 +204,13 @@ export function EquipmentDetailScreen({
 
         <section className="mt-6">
           <DataTable
-            columns={assignmentColumns}
-            rows={assignmentRows}
+            columns={activityColumns}
+            rows={activityRows}
             selectable={false}
             showToolbar={false}
-            summary={`${assignmentRows.length} asignaciones de este serial`}
+            summary={`${activityRows.length} registros de este serial`}
           />
         </section>
-
-        <section className="mt-6">
-          <DataTable
-            columns={incidentColumnsWithAction}
-            rows={incidentRows}
-            selectable={false}
-            showToolbar={false}
-            summary={`${incidentRows.length} incidencias de este serial`}
-          />
-        </section>
-
-        {historyNotice && (
-          <p className="mt-6 text-xs text-muted-foreground">{historyNotice}</p>
-        )}
 
         {formOpen && (
           <IncidentFormModal

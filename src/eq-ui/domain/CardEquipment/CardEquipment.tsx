@@ -2,6 +2,7 @@ import { FileText, Monitor, Pencil, User } from "lucide-react";
 import type { HTMLAttributes } from "react";
 import { Checkbox } from "../../ui/Checkbox";
 import { Tag } from "../../ui/Tag";
+import { Tooltip } from "../../ui/Tooltip";
 import { cn } from "../../lib/cn";
 import "./card-equipment.css";
 
@@ -63,15 +64,16 @@ export function CardEquipment({
       </div>
 
       <div className="eq-card-equipment__footer">
-        <button
-          type="button"
-          aria-label={`Editar ${name}`}
-          title="Editar"
-          onClick={onMore}
-          className="eq-card-equipment__edit"
-        >
-          <Pencil aria-hidden="true" strokeWidth={1.5} />
-        </button>
+        <Tooltip label="Editar">
+          <button
+            type="button"
+            aria-label={`Editar ${name}`}
+            onClick={onMore}
+            className="eq-card-equipment__edit"
+          >
+            <Pencil aria-hidden="true" strokeWidth={1.5} />
+          </button>
+        </Tooltip>
         {hasIncidents && <Tag label="Incidencias" quantity={incidents} />}
       </div>
     </div>

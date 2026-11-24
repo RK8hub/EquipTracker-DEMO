@@ -9,7 +9,6 @@ export const incidentColumns: DataTableColumn[] = [
   { key: "motivo", header: "Motivo" },
   { key: "reportado", header: "Reportado por" },
   { key: "tecnico", header: "Técnico" },
-  { key: "estado", header: "Estado" },
   { key: "fecha", header: "Fecha" },
 ];
 
@@ -39,7 +38,6 @@ export function incidentRow(
       incident.reported_by,
     ),
     tecnico: userLabel(lookups.userById.get(incident.technician_id), incident.technician_id),
-    estado: incident.status === "open" ? "Abierta" : "Cerrada",
     fecha: formatDate(incident.created_at),
   };
 }

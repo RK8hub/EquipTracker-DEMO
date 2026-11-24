@@ -1,22 +1,22 @@
 import {
-  ArrowLeft,
   BriefcaseBusiness,
   Building2,
-  ClipboardList,
-  FileSpreadsheet,
   Laptop,
   UserRound,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
-import { Button, cn, DataTable, type DataTableRow } from "../eq-ui";
+import { cn, DataTable, NavigationButton, Tooltip, type DataTableRow } from "../eq-ui";
 import { api } from "../api/client";
 import { useAsync } from "../hooks";
 import { toMap } from "../lib/lookups";
-import { equipmentLabel, formatDate } from "../lib/format";
-import { ErrorState, Loading } from "../components/Feedback";
+import { ErrorState, ScreenSkeleton } from "../components/Feedback";
 import { Page } from "../components/Page";
-import { assignmentColumns, assignmentRow } from "../tables/assignments";
-import { incidentColumns, incidentRow } from "../tables/incidents";
+import {
+  detailActivityColumns,
+  detailAssignmentRow,
+  detailIncidentRow,
+} from "../tables/detail-activity";
 
 export interface OperatorDetailProps {
   operatorId: number;
@@ -26,16 +26,15 @@ export interface OperatorDetailProps {
 
 function detailLines(
   operator: { name: string; position?: string | null; department?: string | null },
-  assignments: number,
-  active: number,
-  incidents: number,
+  activeAssignments: number,
+  openIncidents: number,
 ): { label: string; value: string; Icon: LucideIcon }[] {
   return [
     { label: "Nombre", value: operator.name, Icon: UserRound },
     { label: "Puesto", value: operator.position || "—", Icon: BriefcaseBusiness },
     { label: "Departamento", value: operator.department || "—", Icon: Building2 },
-    { label: "Asignaciones", value: `${assignments} (${active} activas)`, Icon: Laptop },
-    { label: "Incidencias", value: String(incidents), Icon: FileSpreadsheet },
+    { label: "Asignaciones", value: String(activeAssignments), Icon: Laptop },
+    { label: "Incidencias", value: String(openIncidents), Icon: Wrench },
   ];
 }
 
@@ -52,7 +51,8 @@ export function OperatorDetailScreen({ operatorId, onBack }: OperatorDetailProps
     return { operators, assignments, incidents, equipment, users };
   }, [operatorId]);
 
-  if (loading && !data) return <Loading />;
+  if (loading && !data)
+    return <ScreenSkeleton title="Operador" subtitle="Detalle del operador." variant="detail" />;
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (!data) return null;
 
@@ -70,32 +70,20 @@ export function OperatorDetailScreen({ operatorId, onBack }: OperatorDetailProps
     (incident) =>
       incident.reported_by === operatorId || incident.reported_by_original === operatorId,
   );
-  const assignmentRows: DataTableRow[] = assignmentsForOperator.map((assignment) =>
-    assignmentRow(assignment, { equipmentById, operatorById, userById }),
-  );
-  const incidentRows: DataTableRow[] = incidentsForOperator.map((incident) =>
-    incidentRow(incident, { equipmentById, operatorById, userById }),
-  );
-
-  const activity = [
-    ...assignmentsForOperator.map((assignment) => ({
-      id: `asignacion-${assignment.id}`,
-      date: assignment.returned_at ?? assignment.assigned_at,
-      label: assignment.status === "active" ? "Asignación entregada" : "Asignación devuelta",
-      detail: equipmentLabel(equipmentById.get(assignment.equipment_id), assignment.equipment_id),
-    })),
-    ...incidentsForOperator.map((incident) => ({
-      id: `incidencia-${incident.id}`,
-      date: incident.resolved_at ?? incident.created_at,
-      label: incident.status === "open" ? "Incidencia reportada" : "Incidencia cerrada",
-      detail: `${incident.type || "Incidencia"} · ${equipmentLabel(equipmentById.get(incident.equipment_id), incident.equipment_id)}`,
-    })),
-  ]
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 5);
+  const activityRows: DataTableRow[] = [
+    ...assignmentsForOperator.map((assignment) =>
+      detailAssignmentRow(assignment, { equipmentById, operatorById, userById }),
+    ),
+    ...incidentsForOperator.map((incident) =>
+      detailIncidentRow(incident, { equipmentById, operatorById, userById }),
+    ),
+  ];
 
   const activeCount = assignmentsForOperator.filter(
     (assignment) => assignment.status === "active",
+  ).length;
+  const openIncidentCount = incidentsForOperator.filter(
+    (incident) => incident.status === "open",
   ).length;
 
   return (
@@ -106,11 +94,9 @@ export function OperatorDetailScreen({ operatorId, onBack }: OperatorDetailProps
         fluid
       >
         <div className="mb-6">
-          <Button
-            text="Volver a operadores"
-            variant="ghost"
-            leftIcon={<ArrowLeft aria-hidden="true" className="size-4" />}
-            showLeftIcon
+          <NavigationButton
+            direction="previous"
+            label="Volver a operadores"
             onClick={onBack}
           />
         </div>
@@ -118,7 +104,7 @@ export function OperatorDetailScreen({ operatorId, onBack }: OperatorDetailProps
         <section className="rounded-[24px] border border-stroke bg-card p-6">
           <h2 className="text-lg font-semibold">Datos</h2>
           <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {detailLines(operator, assignmentRows.length, activeCount, incidentRows.length).map(
+            {detailLines(operator, activeCount, openIncidentCount).map(
               ({ label, value, Icon }, index) => (
                 <div key={label} className="flex min-w-0 items-center gap-3">
                   {index > 0 && (
@@ -137,8 +123,10 @@ export function OperatorDetailScreen({ operatorId, onBack }: OperatorDetailProps
                   </div>
                   <div className="min-w-0">
                     <dt className="text-xs text-muted-foreground">{label}</dt>
-                    <dd className="truncate text-sm text-primary" title={value}>
-                      {value}
+                    <dd className="text-sm text-primary">
+                      <Tooltip label={value} className="block w-full">
+                        <span className="block w-full truncate">{value}</span>
+                      </Tooltip>
                     </dd>
                   </div>
                 </div>
@@ -148,54 +136,13 @@ export function OperatorDetailScreen({ operatorId, onBack }: OperatorDetailProps
         </section>
 
         <section className="mt-6">
-          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-            <ClipboardList aria-hidden="true" className="size-5 text-primary" />
-            Asignaciones
-          </h2>
           <DataTable
-            columns={assignmentColumns}
-            rows={assignmentRows}
+            columns={detailActivityColumns}
+            rows={activityRows}
             selectable={false}
             showToolbar={false}
-            summary={`${assignmentRows.length} asignaciones de este operador`}
+            summary={`${activityRows.length} registros de este operador`}
           />
-        </section>
-
-        <section className="mt-6">
-          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-            <FileSpreadsheet aria-hidden="true" className="size-5 text-primary" />
-            Incidencias
-          </h2>
-          <DataTable
-            columns={incidentColumns}
-            rows={incidentRows}
-            selectable={false}
-            showToolbar={false}
-            summary={`${incidentRows.length} incidencias reportadas por este operador`}
-          />
-        </section>
-
-        <section className="mt-6 rounded-[24px] border border-stroke bg-card p-6">
-          <h2 className="text-lg font-semibold">Historial reciente</h2>
-          {activity.length === 0 ? (
-            <p className="mt-2 text-sm text-muted-foreground">
-              Sin actividad reciente registrada para este operador.
-            </p>
-          ) : (
-            <ul className="mt-4 flex flex-col gap-3">
-              {activity.map((entry) => (
-                <li
-                  key={entry.id}
-                  className="flex flex-wrap items-baseline justify-between gap-2 border-b border-stroke pb-2 text-sm last:border-0 last:pb-0"
-                >
-                  <span>
-                    {entry.label} · {entry.detail}
-                  </span>
-                  <span className="text-xs text-muted-foreground">{formatDate(entry.date)}</span>
-                </li>
-              ))}
-            </ul>
-          )}
         </section>
       </Page>
       <div className="flex-1" />

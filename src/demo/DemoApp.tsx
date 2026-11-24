@@ -106,12 +106,7 @@ export function DemoApp() {
     screen = <EquipmentScreen onOpenDetail={setDetailId} />;
   else if (!detailOpen && page === "asignaciones") screen = <AssignmentsScreen />;
   else if (!detailOpen && page === "incidencias") screen = <IncidentsScreen />;
-  else if (!detailOpen && page === "historial")
-    screen = (
-      <HistoryScreen
-        historyNotice="El historial guarda instantáneas inmutables; la trazabilidad disponible depende del plan."
-      />
-    );
+  else if (!detailOpen && page === "historial") screen = <HistoryScreen />;
   else if (!detailOpen && page === "usuarios") screen = <UsersScreen />;
   else if (!detailOpen && page === "ajustes")
     screen = (

@@ -9,9 +9,11 @@ import {
 } from "../eq-ui";
 import { SortDropdown } from "../components/SortDropdown";
 import { api } from "../api/client";
-import { errorMessage, useAsync, useSort } from "../hooks";
+import { errorMessage, useAsync, useDebouncedValue, useFieldFlash, useSort } from "../hooks";
 import { toMap } from "../lib/lookups";
-import { ErrorState, Loading } from "../components/Feedback";
+import { ErrorState, ScreenSkeleton } from "../components/Feedback";
+import { EmptyCollection } from "../components/EmptyCollection";
+import { FieldError } from "../components/FieldError";
 import { ModalCard } from "../components/ModalCard";
 import { Overlay } from "../components/Overlay";
 import { Page } from "../components/Page";
@@ -47,6 +49,7 @@ const PAGE_SIZE = 12;
 
 export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScreenProps) {
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
   const [page, setPage] = useState(0);
   const { sortBy, sortOpen, select: selectSort, toggle: toggleSort } = useSort<"modelo" | "serial" | "operador" | "estado" | "incidencias">("modelo");
   const [selected, setSelected] = useState<string[]>([]);
@@ -54,24 +57,37 @@ export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScre
   const [specsOpen, setSpecsOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [busy, setBusy] = useState(false);
+  const { flash, clear, error: fieldError, textField } = useFieldFlash();
 
   const { data, loading, error, reload } = useAsync(async () => {
     const [equipment, specs, operators, assignments, incidents] =
       await Promise.all([
-        api.equipment.paged({ skip: page * PAGE_SIZE, limit: PAGE_SIZE, search }),
+        api.equipment.paged({
+          skip: page * PAGE_SIZE,
+          limit: PAGE_SIZE,
+          search: debouncedSearch,
+        }),
         api.specs.list(0, 100),
         api.operators.list(0, 100),
         api.assignments.list(0, 100),
         api.incidents.list(0, 100),
       ]);
     return { ...equipment, specs, operators, assignments, incidents };
-  }, [page, search]);
+  }, [page, debouncedSearch]);
 
   useEffect(() => {
     setPage(0);
-  }, [search]);
+  }, [debouncedSearch]);
 
-  if (loading && !data) return <Loading />;
+  if (loading && !data)
+    return (
+      <ScreenSkeleton
+        title="Equipos"
+        subtitle="Inventario de equipos registrados y su asignación actual."
+        variant="equipment-cards"
+        fluid
+      />
+    );
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (!data) return null;
 
@@ -90,6 +106,7 @@ export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScre
     );
   }
 
+  // El mock filtra por texto en servidor; aquí solo se ordena la página actual.
   const filtered = [...data.items].sort((a, b) => {
       const operatorName = (equipmentId: number) => {
         const assignment = data.assignments.find(
@@ -134,6 +151,8 @@ export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScre
       }
       return String(av).localeCompare(String(bv), "es", { sensitivity: "base" });
     });
+  const visible = filtered;
+  const total = data.total;
 
   function toggleSelected(id: string, checked: boolean) {
     setSelected((current) =>
@@ -144,7 +163,12 @@ export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScre
   async function save() {
     if (!form || busy) return;
     const specsId = Number(form.specs_id);
-    if (!form.serial.trim() || !form.brand.trim() || !form.model.trim()) {
+    const missing: string[] = [];
+    if (!form.serial.trim()) missing.push("serial");
+    if (!form.brand.trim()) missing.push("brand");
+    if (!form.model.trim()) missing.push("model");
+    if (missing.length > 0) {
+      flash(missing);
       toast.error("Completa serial, marca y modelo.");
       return;
     }
@@ -205,6 +229,7 @@ export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScre
       title="Equipos"
       subtitle="Inventario de equipos registrados y su asignación actual."
       fluid
+      className="min-h-full"
     >
       <Header
         variant="crud"
@@ -244,13 +269,19 @@ export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScre
         }
       />
 
-      {filtered.length === 0 ? (
+      {data.total === 0 ? (
+        <EmptyCollection
+          label="equipos"
+          action="equipo"
+          onCreate={canWrite ? () => setForm({ ...emptyForm }) : undefined}
+        />
+      ) : visible.length === 0 ? (
         <p className="p-10 text-center text-sm text-muted-foreground">
-          Sin equipos registrados.
+          Sin resultados.
         </p>
       ) : (
         <div className="grid justify-between items-center gap-x-7 2xl:gap-x-20 gap-y-10 [grid-template-columns:repeat(auto-fill,300px)]">
-          {filtered.map((equipment) => {
+          {visible.map((equipment) => {
             const active = activeAssignmentByEquipment.get(equipment.id);
             const operatorName = active
               ? operatorById.get(active.operator_id)?.name ?? "Sin asignar"
@@ -286,21 +317,23 @@ export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScre
         </div>
       )}
 
-      <div className="mt-8 flex items-center justify-center gap-4 text-sm text-muted-foreground">
-        <Button
-          text="Anterior"
-          disabled={page === 0}
-          onClick={() => setPage((value) => Math.max(0, value - 1))}
-        />
-        <span>
-          {data.total} equipos · pág. {page + 1}/{Math.max(1, Math.ceil(data.total / PAGE_SIZE))}
-        </span>
-        <Button
-          text="Siguiente"
-          disabled={(page + 1) * PAGE_SIZE >= data.total}
-          onClick={() => setPage((value) => value + 1)}
-        />
-      </div>
+      {total > 0 && (
+        <div className="mt-auto flex items-center justify-center gap-4 pt-8 text-sm text-muted-foreground">
+          <Button
+            text="Anterior"
+            disabled={page === 0}
+            onClick={() => setPage((value) => Math.max(0, value - 1))}
+          />
+          <span>
+            {total} equipos · pág. {page + 1}/{Math.max(1, Math.ceil(total / PAGE_SIZE))}
+          </span>
+          <Button
+            text="Siguiente"
+            disabled={(page + 1) * PAGE_SIZE >= total}
+            onClick={() => setPage((value) => value + 1)}
+          />
+        </div>
+      )}
 
       {form && (
         <ModalCard
@@ -324,39 +357,54 @@ export function EquipmentScreen({ onOpenDetail, canWrite = true }: EquipmentScre
           }
         >
           <div className="grid grid-cols-2 gap-3">
-            <Textfield
-              label="Serial"
-              placeholder="SN-001"
-              value={form.serial}
-              onChange={(event) =>
-                setForm((current) =>
-                  current ? { ...current, serial: event.target.value } : current,
-                )
-              }
-              showIcon={false}
-            />
-            <Textfield
-              label="Marca"
-              placeholder="Dell"
-              value={form.brand}
-              onChange={(event) =>
-                setForm((current) =>
-                  current ? { ...current, brand: event.target.value } : current,
-                )
-              }
-              showIcon={false}
-            />
-            <Textfield
-              label="Modelo"
-              placeholder="Latitude 5440"
-              value={form.model}
-              onChange={(event) =>
-                setForm((current) =>
-                  current ? { ...current, model: event.target.value } : current,
-                )
-              }
-              showIcon={false}
-            />
+            <div>
+              <Textfield
+                {...textField("serial")}
+                label="Serial"
+                placeholder="SN-001"
+                value={form.serial}
+                onChange={(event) => {
+                  clear();
+                  setForm((current) =>
+                    current ? { ...current, serial: event.target.value } : current,
+                  );
+                }}
+                showIcon={false}
+              />
+              <FieldError message={fieldError("serial")} />
+            </div>
+            <div>
+              <Textfield
+                {...textField("brand")}
+                label="Marca"
+                placeholder="Dell"
+                value={form.brand}
+                onChange={(event) => {
+                  clear();
+                  setForm((current) =>
+                    current ? { ...current, brand: event.target.value } : current,
+                  );
+                }}
+                showIcon={false}
+              />
+              <FieldError message={fieldError("brand")} />
+            </div>
+            <div>
+              <Textfield
+                {...textField("model")}
+                label="Modelo"
+                placeholder="Latitude 5440"
+                value={form.model}
+                onChange={(event) => {
+                  clear();
+                  setForm((current) =>
+                    current ? { ...current, model: event.target.value } : current,
+                  );
+                }}
+                showIcon={false}
+              />
+              <FieldError message={fieldError("model")} />
+            </div>
           </div>
 
           <SelectField

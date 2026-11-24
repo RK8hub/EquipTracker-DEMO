@@ -95,7 +95,7 @@ export function DataTable({
               <div
                 key={column.key}
                 role="columnheader"
-                className={cn("eq-data-table__cell", column.className)}
+                className={cn("eq-data-table__cell", "text-center", column.className)}
               >
                 {column.header}
               </div>
@@ -124,7 +124,7 @@ export function DataTable({
                   <div
                     key={column.key}
                     role="cell"
-                    className={cn("eq-data-table__cell", column.className)}
+                    className={cn("eq-data-table__cell", "text-center", column.className)}
                   >
                     {typeof value === "string" ? (
                       <Tooltip label={value} className="flex w-full">
