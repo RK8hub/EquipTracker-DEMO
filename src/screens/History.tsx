@@ -75,7 +75,7 @@ function QuotaDonut({ label, used, limit }: { label: string; used: number; limit
     <div className="flex min-w-0 items-center gap-2">
       <Tooltip
         placement="bottom"
-        label={`${format(used)} usadas · ${format(limit)} de cupo · ${usedPercent.toFixed(1).replace(".", ",")}%`}
+        label={`${format(used)} usadas · ${format(limit)} de límite · ${usedPercent.toFixed(1).replace(".", ",")}%`}
       >
         <div
           role="img"
